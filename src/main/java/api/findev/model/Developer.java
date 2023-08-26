@@ -37,6 +37,6 @@ public class Developer {
     @Column(name = "status")
     private boolean status = true;
 
-    @OneToMany(mappedBy = "developer")
-    private List<DeveloperSkill> developerSkills = new ArrayList<>();
+    @OneToMany(mappedBy = "developer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Skill> skills = new ArrayList<>();
 }

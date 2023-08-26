@@ -1,22 +1,25 @@
 package api.findev.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name = "TB_SKILLS")
+@Table(name = "TB_SKILL")
 public class Skill {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name = "name")
+    @ManyToOne
+    @JoinColumn(name = "developer_id")
+    @JsonIgnore
+    private Developer developer;
+
     private String name;
-
-    @Column(name = "experience_years")
     private int experienceYears;
 }

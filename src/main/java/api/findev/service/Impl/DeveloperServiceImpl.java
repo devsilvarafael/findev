@@ -55,6 +55,7 @@ public class DeveloperServiceImpl implements DeveloperService {
 
     @Override
     public DeveloperDto create(Developer developer) {
+        developer.getSkills().forEach(skill -> skill.setDeveloper(developer));
         Developer savedDeveloper = developerRepository.save(developer);
         return developerDTOMapper.apply(savedDeveloper);
     }
