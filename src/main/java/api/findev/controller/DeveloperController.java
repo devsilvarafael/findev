@@ -26,7 +26,7 @@ public class DeveloperController {
     }
 
     @GetMapping
-    ResponseEntity<Page<DeveloperDto>> getAllDevelopers(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+    ResponseEntity<Page<DeveloperDto>> getAllDevelopers(@PageableDefault(page = 0, size = 10, sort = "firstName", direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(developerService.getAllDevelopers(pageable));
     }
 

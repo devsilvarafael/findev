@@ -15,7 +15,6 @@ public class DeveloperDTOMapper implements Function<Developer, DeveloperDto> {
     @Override
     public DeveloperDto apply(Developer developer) {
         return new DeveloperDto(
-                developer.getId(),
                 developer.getFirstName(),
                 developer.getLastName(),
                 developer.getEmail(),

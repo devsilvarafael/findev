@@ -24,7 +24,7 @@ public class RecruiterController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<RecruiterDto>> getAllRecruiters(@PageableDefault(page = 0, size = 10, sort = "recruiterId", direction = Sort.Direction.ASC) Pageable pageable) {
+    public ResponseEntity<Page<RecruiterDto>> getAllRecruiters(@PageableDefault(page = 0, size = 10, sort = "company", direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(recruiterService.getAllRecruiters(pageable));
     }
 

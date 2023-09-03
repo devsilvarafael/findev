@@ -1,7 +1,6 @@
 package api.findev.service.Impl;
 
 import api.findev.dto.RecruiterDto;
-import api.findev.mapper.CompanyDTOMapper;
 import api.findev.mapper.RecruiterDTOMapper;
 import api.findev.model.Company;
 import api.findev.model.Recruiter;
