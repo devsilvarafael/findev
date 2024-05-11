@@ -15,6 +15,7 @@ public class DeveloperDTOMapper implements Function<Developer, DeveloperDto> {
     @Override
     public DeveloperDto apply(Developer developer) {
         return new DeveloperDto(
+                developer.getId(),
                 developer.getFirstName(),
                 developer.getLastName(),
                 developer.getEmail(),
@@ -22,7 +23,7 @@ public class DeveloperDTOMapper implements Function<Developer, DeveloperDto> {
                 developer.getPortfolio(),
                 developer.getSeniority(),
                 developer.getSkills().stream()
-                        .map(this::mapToSkillDto)  // Convert Skill to SkillDto
+                        .map(this::mapToSkillDto)
                         .collect(Collectors.toList())
         );
     }

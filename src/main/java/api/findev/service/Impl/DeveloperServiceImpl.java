@@ -54,6 +54,39 @@ public class DeveloperServiceImpl implements DeveloperService {
     }
 
     @Override
+    public DeveloperDto updateDeveloper(UUID id, Developer developerDto) {
+        Developer existingDeveloper = developerRepository.findById(id)
+                .orElseThrow(() -> new DeveloperNotFoundException("Developer not found"));
+
+        if (developerDto.getEmail() != null) {
+            existingDeveloper.setEmail(developerDto.getEmail());
+        }
+        if (developerDto.getPortfolio() != null) {
+            existingDeveloper.setPortfolio(developerDto.getPortfolio());
+        }
+
+        if (developerDto.getSkills() != null) {
+            existingDeveloper.getSkills().removeIf(skill -> !developerDto.getSkills().contains(skill));
+            developerDto.getSkills().forEach(skill -> {
+                if (!existingDeveloper.getSkills().contains(skill)) {
+                    existingDeveloper.getSkills().add(skill);
+                }
+            });
+        }
+
+
+        if (developerDto.getPhone() != null) {
+            existingDeveloper.setPhone(developerDto.getPhone());
+        }
+
+        existingDeveloper.setSeniority(developerDto.getSeniority());
+
+        Developer updatedDeveloper = developerRepository.save(existingDeveloper);
+
+        return developerDTOMapper.apply(updatedDeveloper);
+    }
+
+    @Override
     public DeveloperDto create(Developer developer) {
         developer.getSkills().forEach(skill -> skill.setDeveloper(developer));
         Developer savedDeveloper = developerRepository.save(developer);

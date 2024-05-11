@@ -46,4 +46,9 @@ public class DeveloperController {
         developerService.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).body("Developer deleted sucessfully.");
     }
+
+    @PutMapping("/{developerId}")
+    public ResponseEntity<DeveloperDto> updateDeveloper(@PathVariable UUID developerId, @RequestBody @Valid Developer developer) {
+        return ResponseEntity.status(HttpStatus.OK).body(developerService.updateDeveloper(developerId, developer));
+    }
 }

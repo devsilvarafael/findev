@@ -17,6 +17,8 @@ public interface DeveloperService {
 
     void deleteById(UUID id) throws DeveloperNotFoundException;
 
+    DeveloperDto updateDeveloper(UUID id, Developer developer);
+
     DeveloperDto create(Developer developer);
 
 }
