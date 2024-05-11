@@ -11,33 +11,19 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "TB_RECRUITER")
-public class Recruiter {
+@Table(name = "TB_USER")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @OneToOne
-    @MapsId
-    private User user;
-
-
-    @Column(name = "first_name")
-    private String firstName;
-
-    @Column(name = "last_name")
-    private String lastName;
-
     @Column(name = "email")
     private String email;
-
-    @Column(name = "phone")
-    private String phone;
 
     @Column(name = "password")
     private String password;
 
-    @Column(name = "company")
-    private UUID company;
+    @Column(name = "role")
+    private String role;
 }

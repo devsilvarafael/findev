@@ -5,8 +5,10 @@ import api.findev.exceptions.DeveloperNotFoundException;
 import api.findev.mapper.DeveloperDTOMapper;
 import api.findev.model.Developer;
 import api.findev.model.Skill;
+import api.findev.model.User;
 import api.findev.repository.DeveloperRepository;
 import api.findev.service.DeveloperService;
+import api.findev.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -21,10 +23,12 @@ import java.util.stream.Collectors;
 public class DeveloperServiceImpl implements DeveloperService {
 
     private final DeveloperRepository developerRepository;
+    private final UserService userService;
     private final DeveloperDTOMapper developerDTOMapper;
 
-    public DeveloperServiceImpl(DeveloperRepository developerRepository, DeveloperDTOMapper developerDTOMapper) {
+    public DeveloperServiceImpl(DeveloperRepository developerRepository, UserService userService, DeveloperDTOMapper developerDTOMapper) {
         this.developerRepository = developerRepository;
+        this.userService = userService;
         this.developerDTOMapper = developerDTOMapper;
     }
 
@@ -52,6 +56,7 @@ public class DeveloperServiceImpl implements DeveloperService {
                 .orElseThrow(() -> new DeveloperNotFoundException("Delete failed. Developer not found"));
 
         developerRepository.delete(developer);
+        userService.deleteUser(id);
     }
 
     @Override
@@ -88,8 +93,18 @@ public class DeveloperServiceImpl implements DeveloperService {
 
     @Override
     public DeveloperDto create(Developer developer) {
+        User user = new User();
+        user.setEmail(developer.getEmail());
+        user.setPassword(developer.getPassword());
+        user.setRole("DEVELOPER");
+        User savedUser = userService.save(user);
+
+        developer.setUser(savedUser);
+
         developer.getSkills().forEach(skill -> skill.setDeveloper(developer));
         Developer savedDeveloper = developerRepository.save(developer);
+
         return developerDTOMapper.apply(savedDeveloper);
     }
+
 }

@@ -6,9 +6,11 @@ import api.findev.exceptions.RecruiterNotFoundException;
 import api.findev.mapper.RecruiterDTOMapper;
 import api.findev.model.Company;
 import api.findev.model.Recruiter;
+import api.findev.model.User;
 import api.findev.repository.CompanyRepository;
 import api.findev.repository.RecruiterRepository;
 import api.findev.service.RecruiterService;
+import api.findev.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -24,12 +26,15 @@ public class RecruiterServiceImpl implements RecruiterService {
 
     private final RecruiterRepository recruiterRepository;
     private final CompanyRepository companyRepository;
+
+    private final UserService userService;
     private final RecruiterDTOMapper recruiterDTOMapper;
 
 
-    public RecruiterServiceImpl(RecruiterRepository recruiterRepository, CompanyRepository companyRepository, RecruiterDTOMapper recruiterDTOMapper) {
+    public RecruiterServiceImpl(RecruiterRepository recruiterRepository, UserService userService, CompanyRepository companyRepository, RecruiterDTOMapper recruiterDTOMapper) {
         this.recruiterRepository = recruiterRepository;
         this.recruiterDTOMapper = recruiterDTOMapper;
+        this.userService = userService;
         this.companyRepository = companyRepository;
     }
 
@@ -55,6 +60,7 @@ public class RecruiterServiceImpl implements RecruiterService {
                 .orElseThrow(() -> new RecruiterNotFoundException("Delete failed. Recruiter not found"));
 
         recruiterRepository.delete(recruiter);
+        userService.deleteUser(id);
     }
 
     @Override
@@ -81,8 +87,21 @@ public class RecruiterServiceImpl implements RecruiterService {
     }
 
     @Override
-    public  RecruiterDto createRecruiter(Recruiter recruiterDto) {
-        Recruiter savedRecruiter = recruiterRepository.save(recruiterDto);
+    public RecruiterDto createRecruiter(Recruiter recruiter) {
+
+        User user = new User();
+        user.setEmail(recruiter.getEmail());
+        user.setPassword(recruiter.getPassword());
+        user.setRole("RECRUITER");
+        User savedUser = userService.save(user);
+
+
+        recruiter.setUser(savedUser);
+
+
+        Recruiter savedRecruiter = recruiterRepository.save(recruiter);
+
         return recruiterDTOMapper.apply(savedRecruiter);
     }
+
 }

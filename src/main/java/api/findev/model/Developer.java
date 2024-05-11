@@ -20,6 +20,12 @@ public class Developer {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    @OneToOne
+    @MapsId
+    private User user;
+
+
+
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
