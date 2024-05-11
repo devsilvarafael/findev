@@ -37,11 +37,19 @@ public class CompanyServiceImpl implements CompanyService {
         List<CompanyDto> list = companyRepository.findAll()
                 .stream().map(companyDTOMapper).collect(Collectors.toList());
 
+        if (list.isEmpty()) {
+            throw new CompanyNotFoundException("No companies found.");
+        }
+
         return new PageImpl<>(list);
     }
 
     @Override
     public CompanyDto createCompany(Company company) {
+        if (company == null) {
+            throw new IllegalArgumentException("Company cannot be null.");
+        }
+
         Company savedCompany = companyRepository.save(company);
         return companyDTOMapper.apply(savedCompany);
     }
@@ -49,7 +57,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public void deleteCompany(UUID id) {
         Company company = companyRepository.findById(id)
-                .orElseThrow(() -> new CompanyNotFoundException("Failed to delete company. Company not found"));
+                .orElseThrow(() -> new CompanyNotFoundException("Failed to delete company. Company not found."));
 
         companyRepository.delete(company);
     }
@@ -57,13 +65,17 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     @Transactional
     public CompanyDto updateCompany(UUID id, Company companyDto) {
+        if (companyDto == null) {
+            throw new IllegalArgumentException("Company cannot be null");
+        }
+
         return companyRepository.findById(id)
                 .map(existingCompany -> {
                     BeanUtils.copyProperties(companyDto, existingCompany, getNullPropertyNames(companyDto));
                     Company updatedCompany = companyRepository.save(existingCompany);
                     return companyDTOMapper.apply(updatedCompany);
                 })
-                .orElseThrow(() -> new CompanyNotFoundException("Failed to update company. Company not found"));
+                .orElseThrow(() -> new CompanyNotFoundException("Failed to update company. Company not found."));
     }
 
     private String[] getNullPropertyNames(Object source) {
@@ -74,3 +86,4 @@ public class CompanyServiceImpl implements CompanyService {
                 .toArray(String[]::new);
     }
 }
+

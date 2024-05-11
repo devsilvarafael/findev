@@ -52,7 +52,7 @@ public class CompanyController {
             companyService.deleteCompany(companyId);
             return ResponseEntity.status(HttpStatus.OK).body("Company has been deleted with successfull");
         } catch (CompanyNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 }
