@@ -14,5 +14,9 @@ public interface RecruiterService {
     Page<RecruiterDto> getAllRecruiters(Pageable pageable);
     Page<RecruiterDto> getAllRecruitersByCompany(Company company, Pageable pageable);
 
+    void deleteById(UUID id);
+
+    RecruiterDto updateRecruiter(UUID id, Recruiter recruiterDto);
+
     RecruiterDto createRecruiter(Recruiter recruiterDto);
 }

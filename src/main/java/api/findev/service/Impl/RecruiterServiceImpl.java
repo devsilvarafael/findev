@@ -1,6 +1,8 @@
 package api.findev.service.Impl;
 
 import api.findev.dto.RecruiterDto;
+import api.findev.exceptions.DeveloperNotFoundException;
+import api.findev.exceptions.RecruiterNotFoundException;
 import api.findev.mapper.RecruiterDTOMapper;
 import api.findev.model.Company;
 import api.findev.model.Recruiter;
@@ -48,7 +50,38 @@ public class RecruiterServiceImpl implements RecruiterService {
     }
 
     @Override
-    public RecruiterDto createRecruiter(Recruiter recruiterDto) {
+    public void deleteById(UUID id) {
+        Recruiter recruiter = recruiterRepository.findById(id)
+                .orElseThrow(() -> new RecruiterNotFoundException("Delete failed. Recruiter not found"));
+
+        recruiterRepository.delete(recruiter);
+    }
+
+    @Override
+    public RecruiterDto updateRecruiter(UUID id, Recruiter recruiterDto) {
+        Recruiter existingRecruiter = recruiterRepository.findById(id)
+                .orElseThrow(() -> new RecruiterNotFoundException("Recruiter not found"));
+
+        if (recruiterDto.getEmail() != null) {
+            existingRecruiter.setEmail(recruiterDto.getEmail());
+        }
+        if (recruiterDto.getPassword() != null) {
+            existingRecruiter.setPassword(recruiterDto.getPassword());
+        }
+        if (recruiterDto.getPhone() != null) {
+            existingRecruiter.setPhone(recruiterDto.getPhone());
+        }
+        if (recruiterDto.getCompany() != null) {
+            existingRecruiter.setCompany(recruiterDto.getCompany());
+        }
+
+        Recruiter updatedRecruiter = recruiterRepository.save(existingRecruiter);
+
+        return recruiterDTOMapper.apply(updatedRecruiter);
+    }
+
+    @Override
+    public  RecruiterDto createRecruiter(Recruiter recruiterDto) {
         Recruiter savedRecruiter = recruiterRepository.save(recruiterDto);
         return recruiterDTOMapper.apply(savedRecruiter);
     }

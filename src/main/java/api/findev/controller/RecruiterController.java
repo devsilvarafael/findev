@@ -5,6 +5,7 @@ import api.findev.model.Company;
 import api.findev.model.Recruiter;
 import api.findev.service.RecruiterService;
 import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -12,6 +13,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/recruiters")
@@ -38,5 +41,16 @@ public class RecruiterController {
     @PostMapping("")
     public ResponseEntity<RecruiterDto> createNewRecruiter(@RequestBody @Valid Recruiter recruiter) {
         return ResponseEntity.status(HttpStatus.CREATED).body(recruiterService.createRecruiter(recruiter));
+    }
+
+    @PutMapping("/{recruiterId}")
+    public ResponseEntity<RecruiterDto> updateRecruiter(@PathVariable UUID recruiterId, @RequestBody @Valid Recruiter recruiter) {
+        return ResponseEntity.status(HttpStatus.OK).body(recruiterService.updateRecruiter(recruiterId, recruiter));
+    }
+
+    @DeleteMapping("/{recruiterId}")
+    public ResponseEntity<Object> deleteRecruiter(@PathVariable UUID recruiterId) {
+        recruiterService.deleteById(recruiterId);
+        return ResponseEntity.status(HttpStatus.OK).body("Developer deleted sucessfully.");
     }
 }
