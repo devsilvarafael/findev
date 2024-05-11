@@ -4,6 +4,7 @@ import api.findev.dto.DeveloperDto;
 import api.findev.exceptions.DeveloperNotFoundException;
 import api.findev.mapper.DeveloperDTOMapper;
 import api.findev.model.Developer;
+import api.findev.model.Skill;
 import api.findev.repository.DeveloperRepository;
 import api.findev.service.DeveloperService;
 import org.springframework.data.domain.Page;
@@ -66,14 +67,12 @@ public class DeveloperServiceImpl implements DeveloperService {
         }
 
         if (developerDto.getSkills() != null) {
-            existingDeveloper.getSkills().removeIf(skill -> !developerDto.getSkills().contains(skill));
-            developerDto.getSkills().forEach(skill -> {
-                if (!existingDeveloper.getSkills().contains(skill)) {
-                    existingDeveloper.getSkills().add(skill);
-                }
-            });
+            existingDeveloper.getSkills().clear();
+            for (Skill skill : developerDto.getSkills()) {
+                skill.setDeveloper(existingDeveloper);
+                existingDeveloper.getSkills().add(skill);
+            }
         }
-
 
         if (developerDto.getPhone() != null) {
             existingDeveloper.setPhone(developerDto.getPhone());
@@ -85,6 +84,7 @@ public class DeveloperServiceImpl implements DeveloperService {
 
         return developerDTOMapper.apply(updatedDeveloper);
     }
+
 
     @Override
     public DeveloperDto create(Developer developer) {
