@@ -64,13 +64,25 @@ public class DeveloperServiceImpl implements DeveloperService {
         Developer existingDeveloper = developerRepository.findById(id)
                 .orElseThrow(() -> new DeveloperNotFoundException("Developer not found"));
 
+        // Update all fields if they are not null
+        if (developerDto.getFirstName() != null) {
+            existingDeveloper.setFirstName(developerDto.getFirstName());
+        }
+        if (developerDto.getLastName() != null) {
+            existingDeveloper.setLastName(developerDto.getLastName());
+        }
         if (developerDto.getEmail() != null) {
             existingDeveloper.setEmail(developerDto.getEmail());
+        }
+        if (developerDto.getPhone() != null) {
+            existingDeveloper.setPhone(developerDto.getPhone());
+        }
+        if (developerDto.getPassword() != null) {
+            existingDeveloper.setPassword(developerDto.getPassword());
         }
         if (developerDto.getPortfolio() != null) {
             existingDeveloper.setPortfolio(developerDto.getPortfolio());
         }
-
         if (developerDto.getSkills() != null) {
             existingDeveloper.getSkills().clear();
             for (Skill skill : developerDto.getSkills()) {
@@ -78,17 +90,14 @@ public class DeveloperServiceImpl implements DeveloperService {
                 existingDeveloper.getSkills().add(skill);
             }
         }
-
-        if (developerDto.getPhone() != null) {
-            existingDeveloper.setPhone(developerDto.getPhone());
-        }
-
         existingDeveloper.setSeniority(developerDto.getSeniority());
+        existingDeveloper.setStatus(developerDto.isStatus());
 
         Developer updatedDeveloper = developerRepository.save(existingDeveloper);
 
         return developerDTOMapper.apply(updatedDeveloper);
     }
+
 
 
     @Override

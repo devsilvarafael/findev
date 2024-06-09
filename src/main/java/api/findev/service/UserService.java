@@ -2,6 +2,7 @@ package api.findev.service;
 
 import api.findev.model.User;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface UserService {
@@ -9,4 +10,5 @@ public interface UserService {
     User save(User user);
 
     void deleteUser(UUID id);
+    List<User> findAll();
 }

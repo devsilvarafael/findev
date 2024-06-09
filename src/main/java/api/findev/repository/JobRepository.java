@@ -14,4 +14,5 @@ public interface JobRepository extends JpaRepository<Job, UUID> {
 
     List<Job> findJobsByCompany(UUID id, Pageable pageable);
     List<Job> findJobsByRecruiter(UUID id, Pageable pageable);
+
 }
