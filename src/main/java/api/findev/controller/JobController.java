@@ -53,4 +53,24 @@ public class JobController {
     public ResponseEntity<JobDto> createNewJobAnnounce(@RequestBody @Valid Job job) {
         return ResponseEntity.status(HttpStatus.CREATED).body(jobService.announceNewJob(job));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteJobById(@PathVariable UUID id) {
+        try {
+            jobService.deleteJobById(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<JobDto> updateJob(@PathVariable UUID id, @RequestBody @Valid Job job) {
+        try {
+            JobDto updatedJob = jobService.updateJob(id, job);
+            return ResponseEntity.status(HttpStatus.OK).body(updatedJob);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
 }

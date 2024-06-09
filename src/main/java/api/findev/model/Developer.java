@@ -1,6 +1,7 @@
 package api.findev.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,23 +27,37 @@ public class Developer {
 
 
 
-    @Column(name = "first_name")
+    @Column(name = "first_name", nullable = false)
+    @NotNull
     private String firstName;
-    @Column(name = "last_name")
+
+    @Column(name = "last_name", nullable = false)
+    @NotNull
     private String lastName;
-    @Column(name = "email")
+
+    @Column(name = "email", nullable = false)
+    @NotNull
     private String email;
-    @Column(name = "phone")
+
+    @Column(name = "phone", nullable = false)
+    @NotNull
     private String phone;
-    @Column(name = "password")
+
+    @Column(name = "password", nullable = false)
+    @NotNull
     private String password;
-    @Column(name = "seniority")
+
+    @Column(name = "seniority", nullable = false)
+    @NotNull
     private int seniority;
+
     @Column(name = "portfolio")
     private String portfolio;
-    @Column(name = "status")
+
+    @Column(name = "status", nullable = false)
     private boolean status = true;
 
     @OneToMany(mappedBy = "developer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @NotNull
     private List<Skill> skills = new ArrayList<>();
 }

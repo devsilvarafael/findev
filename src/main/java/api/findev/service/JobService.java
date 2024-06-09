@@ -20,4 +20,7 @@ public interface JobService {
 
     Optional<JobDto> getJobById(UUID id) throws Exception;
     JobDto announceNewJob(Job job);
+
+    void deleteJobById(UUID id) throws Exception;
+    JobDto updateJob(UUID id, Job job) throws Exception;
 }

@@ -32,6 +32,7 @@ public class JobDTOMapper implements Function<Job, JobDto> {
         Optional<Recruiter> recruiterExists = recruiterRepository.findById(job.getRecruiter());
 
         return new JobDto(
+                job.getId(),
                 job.getTitle(),
                 job.getDescription(),
                 job.getStatus(),
