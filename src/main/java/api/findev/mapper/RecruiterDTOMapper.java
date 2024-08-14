@@ -21,7 +21,6 @@ public class RecruiterDTOMapper implements Function<Recruiter, RecruiterDto> {
     public RecruiterDto apply(Recruiter recruiter) {
         Optional<Company> companyOptional = companyRepository.findById(recruiter.getCompany());
 
-        // Check if the company is present in the Optional
         if (companyOptional.isPresent()) {
             Company company = companyOptional.get();
             return new RecruiterDto(
@@ -33,15 +32,14 @@ public class RecruiterDTOMapper implements Function<Recruiter, RecruiterDto> {
                     company
             );
         } else {
-            // Handle the case where no company was found
-            // You can return a default value or throw an exception as needed
+
             return new RecruiterDto(
                     recruiter.getId(),
                     recruiter.getFirstName(),
                     recruiter.getLastName(),
                     recruiter.getEmail(),
                     recruiter.getPhone(),
-                    null // or another default value
+                    null
             );
         }
     }

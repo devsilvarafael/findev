@@ -1,5 +1,6 @@
 package api.findev.service;
 
+import api.findev.dto.UserDto;
 import api.findev.model.User;
 
 import java.util.List;
@@ -11,4 +12,6 @@ public interface UserService {
 
     void deleteUser(UUID id);
     List<User> findAll();
+
+    UserDto login(String email, String password);
 }

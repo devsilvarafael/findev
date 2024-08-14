@@ -68,6 +68,14 @@ public class RecruiterServiceImpl implements RecruiterService {
         Recruiter existingRecruiter = recruiterRepository.findById(id)
                 .orElseThrow(() -> new RecruiterNotFoundException("Recruiter not found"));
 
+        if (recruiterDto.getFirstName() != null) {
+            existingRecruiter.setFirstName(recruiterDto.getFirstName());
+        }
+
+        if (recruiterDto.getLastName() != null) {
+            existingRecruiter.setLastName(recruiterDto.getLastName());
+        }
+
         if (recruiterDto.getEmail() != null) {
             existingRecruiter.setEmail(recruiterDto.getEmail());
         }
