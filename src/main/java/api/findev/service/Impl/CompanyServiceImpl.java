@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.beans.FeatureDescriptor;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -44,7 +45,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public CompanyDto createCompany(Company company) {
         if (Stream.of(company.getRegistrationNumber(), company.getName(), company.getAddress())
-                .anyMatch(field -> field == null)) {
+                .anyMatch(Objects::isNull)) {
             throw new IllegalArgumentException("Company registration number, name, or address cannot be null.");
         }
 
