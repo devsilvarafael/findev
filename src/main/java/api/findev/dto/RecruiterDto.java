@@ -10,7 +10,7 @@ public record RecruiterDto(
     String lastName,
     String email,
     String phone,
-    Company company
+    UUID companyId
 ){
 
 }

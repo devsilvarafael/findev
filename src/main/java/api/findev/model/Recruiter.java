@@ -1,5 +1,7 @@
 package api.findev.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "firstName")
 @Table(name = "TB_RECRUITER")
 public class Recruiter {
 
@@ -38,6 +41,7 @@ public class Recruiter {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "company")
-    private UUID company;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
 }

@@ -19,7 +19,7 @@ public class RecruiterDTOMapper implements Function<Recruiter, RecruiterDto> {
 
     @Override
     public RecruiterDto apply(Recruiter recruiter) {
-        Optional<Company> companyOptional = companyRepository.findById(recruiter.getCompany());
+        Optional<Company> companyOptional = companyRepository.findById(recruiter.getCompany().getId());
 
         if (companyOptional.isPresent()) {
             Company company = companyOptional.get();
@@ -29,7 +29,7 @@ public class RecruiterDTOMapper implements Function<Recruiter, RecruiterDto> {
                     recruiter.getLastName(),
                     recruiter.getEmail(),
                     recruiter.getPhone(),
-                    company
+                    recruiter.getCompany().getId()
             );
         } else {
 

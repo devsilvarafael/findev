@@ -1,10 +1,14 @@
 package api.findev.model;
 
+import api.findev.dto.RecruiterDto;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,4 +40,9 @@ public class Company {
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
+
+    @OneToMany(mappedBy = "company")
+    @JsonManagedReference
+    @JsonIgnoreProperties("company")
+    private List<Recruiter> recruiters;
 }

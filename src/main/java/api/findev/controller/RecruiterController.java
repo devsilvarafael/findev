@@ -1,5 +1,6 @@
 package api.findev.controller;
 
+import api.findev.dto.RecruiterCreateDto;
 import api.findev.dto.RecruiterDto;
 import api.findev.model.Company;
 import api.findev.model.Recruiter;
@@ -39,7 +40,7 @@ public class RecruiterController {
     }
 
     @PostMapping("")
-    public ResponseEntity<RecruiterDto> createNewRecruiter(@RequestBody @Valid Recruiter recruiter) {
+    public ResponseEntity<RecruiterDto> createNewRecruiter(@RequestBody @Valid RecruiterCreateDto recruiter) {
         return ResponseEntity.status(HttpStatus.CREATED).body(recruiterService.createRecruiter(recruiter));
     }
 

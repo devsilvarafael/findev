@@ -1,5 +1,6 @@
 package api.findev.dto;
 
+import java.util.List;
 import java.util.UUID;
 
 public record CompanyDto(
@@ -9,7 +10,8 @@ public record CompanyDto(
         String address,
         String website,
         String email,
-        boolean isActive
+        boolean isActive,
+        List<RecruiterDto> recruiters
 ) {
 
 }

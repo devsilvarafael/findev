@@ -1,5 +1,6 @@
 package api.findev.service;
 
+import api.findev.dto.RecruiterCreateDto;
 import api.findev.dto.RecruiterDto;
 import api.findev.model.Company;
 import api.findev.model.Recruiter;
@@ -18,5 +19,5 @@ public interface RecruiterService {
 
     RecruiterDto updateRecruiter(UUID id, Recruiter recruiterDto);
 
-    RecruiterDto createRecruiter(Recruiter recruiterDto);
+    RecruiterDto createRecruiter(RecruiterCreateDto recruiterDto);
 }

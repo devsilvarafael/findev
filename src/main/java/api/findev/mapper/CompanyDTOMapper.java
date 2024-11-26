@@ -1,15 +1,30 @@
 package api.findev.mapper;
 
 import api.findev.dto.CompanyDto;
+import api.findev.dto.RecruiterDto;
 import api.findev.model.Company;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class CompanyDTOMapper implements Function<Company, CompanyDto> {
+    private final RecruiterDTOMapper recruiterDTOMapper;
+
+    private CompanyDTOMapper(RecruiterDTOMapper recruiterDTOMapper) {
+        this.recruiterDTOMapper = recruiterDTOMapper;
+    }
+
     @Override
     public CompanyDto apply(Company company) {
+        List<RecruiterDto> recruiters = company.getRecruiters().stream()
+                .map(recruiterDTOMapper::apply)
+                .toList();
+
+
         return new CompanyDto(
                 company.getId(),
                 company.getRegistrationNumber(),
@@ -17,7 +32,8 @@ public class CompanyDTOMapper implements Function<Company, CompanyDto> {
                 company.getAddress(),
                 company.getWebsite(),
                 company.getEmail(),
-                company.getIsActive()
+                company.getIsActive(),
+                recruiters
         );
     }
 

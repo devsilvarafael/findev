@@ -1,5 +1,6 @@
 package api.findev.service.Impl;
 
+import api.findev.dto.RecruiterCreateDto;
 import api.findev.dto.RecruiterDto;
 import api.findev.exceptions.DeveloperNotFoundException;
 import api.findev.exceptions.RecruiterNotFoundException;
@@ -94,18 +95,25 @@ public class RecruiterServiceImpl implements RecruiterService {
         return recruiterDTOMapper.apply(updatedRecruiter);
     }
 
-    @Override
-    public RecruiterDto createRecruiter(Recruiter recruiter) {
+    public RecruiterDto createRecruiter(RecruiterCreateDto recruiterCreateDTO) {
+        Company company = companyRepository.findById(recruiterCreateDTO.getCompany())
+                .orElseThrow(() -> new RuntimeException("Company not found"));
 
         User user = new User();
-        user.setEmail(recruiter.getEmail());
-        user.setPassword(recruiter.getPassword());
+        user.setEmail(recruiterCreateDTO.getEmail());
+        user.setPassword(recruiterCreateDTO.getPassword());
         user.setRole("RECRUITER");
+
         User savedUser = userService.save(user);
 
-
+        Recruiter recruiter = new Recruiter();
+        recruiter.setFirstName(recruiterCreateDTO.getFirstName());
+        recruiter.setLastName(recruiterCreateDTO.getLastName());
+        recruiter.setEmail(recruiterCreateDTO.getEmail());
+        recruiter.setPhone(recruiterCreateDTO.getPhone());
+        recruiter.setPassword(recruiterCreateDTO.getPassword());
         recruiter.setUser(savedUser);
-
+        recruiter.setCompany(company);
 
         Recruiter savedRecruiter = recruiterRepository.save(recruiter);
 
