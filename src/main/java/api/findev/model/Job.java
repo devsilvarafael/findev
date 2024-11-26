@@ -46,6 +46,7 @@ public class Job {
     private Recruiter recruiter;
 
     @Column(name = "contract_type", nullable = false)
+    @Enumerated(EnumType.STRING)
     private ContractType contractType;
 
     @Column(name = "minWeekHours", nullable = false)
