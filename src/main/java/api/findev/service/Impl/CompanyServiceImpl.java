@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.beans.FeatureDescriptor;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -37,17 +38,20 @@ public class CompanyServiceImpl implements CompanyService {
         List<CompanyDto> list = companyRepository.findAll()
                 .stream().map(companyDTOMapper).collect(Collectors.toList());
 
-        if (list.isEmpty()) {
-            throw new CompanyNotFoundException("No companies found.");
-        }
-
         return new PageImpl<>(list);
     }
 
     @Override
     public CompanyDto createCompany(Company company) {
-        if (company == null) {
-            throw new IllegalArgumentException("Company cannot be null.");
+        if (Stream.of(company.getRegistrationNumber(), company.getName(), company.getAddress())
+                .anyMatch(field -> field == null)) {
+            throw new IllegalArgumentException("Company registration number, name, or address cannot be null.");
+        }
+
+        Optional<Company> companyAlreadyExists = companyRepository.findCompaniesByRegistrationNumber(company.getRegistrationNumber());
+
+        if (companyAlreadyExists.isPresent()) {
+            throw new IllegalArgumentException("Company registration number already exists.");
         }
 
         Company savedCompany = companyRepository.save(company);

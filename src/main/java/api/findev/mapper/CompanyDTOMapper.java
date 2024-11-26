@@ -12,10 +12,12 @@ public class CompanyDTOMapper implements Function<Company, CompanyDto> {
     public CompanyDto apply(Company company) {
         return new CompanyDto(
                 company.getId(),
+                company.getRegistrationNumber(),
                 company.getName(),
                 company.getAddress(),
                 company.getWebsite(),
-                company.getEmail()
+                company.getEmail(),
+                company.getIsActive()
         );
     }
 

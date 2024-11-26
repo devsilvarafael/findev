@@ -19,16 +19,21 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "address")
+    @Column(name = "address", nullable = false)
     private String address;
 
     @Column(name = "website")
     private String website;
 
+    @Column(name = "registration_number", nullable = false)
+    private String registrationNumber;
+
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive;
 }
