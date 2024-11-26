@@ -24,7 +24,7 @@ public class RecruiterDTOMapper implements Function<Recruiter, RecruiterDto> {
         if (companyOptional.isPresent()) {
             Company company = companyOptional.get();
             return new RecruiterDto(
-                    recruiter.getId(),
+                    recruiter.getRecruiterId(),
                     recruiter.getFirstName(),
                     recruiter.getLastName(),
                     recruiter.getEmail(),
@@ -34,7 +34,7 @@ public class RecruiterDTOMapper implements Function<Recruiter, RecruiterDto> {
         } else {
 
             return new RecruiterDto(
-                    recruiter.getId(),
+                    recruiter.getRecruiterId(),
                     recruiter.getFirstName(),
                     recruiter.getLastName(),
                     recruiter.getEmail(),

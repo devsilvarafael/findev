@@ -32,11 +32,11 @@ public class RecruiterController {
         return ResponseEntity.status(HttpStatus.OK).body(recruiterService.getAllRecruiters(pageable));
     }
 
-    @GetMapping("/{company}")
+    @GetMapping("/company/{companyId}")
     public ResponseEntity<Page<RecruiterDto>> getAllRecruitersByCompany(
-            @PathVariable Company company,
-            @PageableDefault(page = 0, size = 10, sort = "recruiterId", direction = Sort.Direction.ASC) Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(recruiterService.getAllRecruitersByCompany(company, pageable));
+            @PathVariable UUID companyId,
+            @PageableDefault(page = 0, size = 10, direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(recruiterService.getAllRecruitersByCompanyId(companyId, pageable));
     }
 
     @PostMapping("")

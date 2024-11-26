@@ -20,9 +20,11 @@ public class CompanyDTOMapper implements Function<Company, CompanyDto> {
 
     @Override
     public CompanyDto apply(Company company) {
-        List<RecruiterDto> recruiters = company.getRecruiters().stream()
-                .map(recruiterDTOMapper::apply)
-                .toList();
+        List<RecruiterDto> recruiters = (company.getRecruiters() == null ?
+                List.of() :
+                company.getRecruiters().stream()
+                        .map(recruiterDTOMapper::apply)
+                        .collect(Collectors.toList()));
 
 
         return new CompanyDto(

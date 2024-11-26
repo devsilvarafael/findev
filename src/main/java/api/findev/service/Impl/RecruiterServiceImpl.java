@@ -2,6 +2,7 @@ package api.findev.service.Impl;
 
 import api.findev.dto.RecruiterCreateDto;
 import api.findev.dto.RecruiterDto;
+import api.findev.exceptions.CompanyNotFoundException;
 import api.findev.exceptions.DeveloperNotFoundException;
 import api.findev.exceptions.RecruiterNotFoundException;
 import api.findev.mapper.RecruiterDTOMapper;
@@ -47,14 +48,14 @@ public class RecruiterServiceImpl implements RecruiterService {
     }
 
     @Override
-    public Page<RecruiterDto> getAllRecruitersByCompany(Company company, Pageable pageable) {
-        Page<RecruiterDto> recruitersPage = recruiterRepository.findRecruiterByCompany(company, pageable);
+    public Page<RecruiterDto> getAllRecruitersByCompanyId(UUID companyId, Pageable pageable) {
+        boolean companyExists = companyRepository.existsById(companyId);
+        if (!companyExists) {
+            throw new CompanyNotFoundException("Company with ID " + companyId + " not found");
+        }
 
-        List<RecruiterDto> recruiterDtos = recruitersPage.getContent().stream().toList();
-
-        return new PageImpl<>(recruiterDtos, pageable, recruitersPage.getTotalElements());
+        return recruiterRepository.findRecruitersByCompanyId(companyId, pageable);
     }
-
     @Override
     public void deleteById(UUID id) {
         Recruiter recruiter = recruiterRepository.findById(id)

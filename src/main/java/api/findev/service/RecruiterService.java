@@ -13,7 +13,7 @@ import java.util.UUID;
 public interface RecruiterService {
 
     Page<RecruiterDto> getAllRecruiters(Pageable pageable);
-    Page<RecruiterDto> getAllRecruitersByCompany(Company company, Pageable pageable);
+    Page<RecruiterDto> getAllRecruitersByCompanyId(UUID companyId, Pageable pageable);
 
     void deleteById(UUID id);
 

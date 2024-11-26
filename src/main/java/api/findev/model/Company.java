@@ -1,6 +1,7 @@
 package api.findev.model;
 
 import api.findev.dto.RecruiterDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -42,7 +43,6 @@ public class Company {
     private Boolean isActive;
 
     @OneToMany(mappedBy = "company")
-    @JsonManagedReference
-    @JsonIgnoreProperties("company")
+    @JsonIgnore
     private List<Recruiter> recruiters;
 }

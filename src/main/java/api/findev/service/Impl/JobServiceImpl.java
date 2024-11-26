@@ -119,7 +119,7 @@ public class JobServiceImpl implements JobService {
             if (recruiterOpt.isEmpty()) {
                 throw new Exception("Recruiter not found.");
             }
-            existingJob.setRecruiter(recruiterOpt.get().getId());
+            existingJob.setRecruiter(recruiterOpt.get().getRecruiterId());
         }
 
 

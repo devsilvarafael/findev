@@ -19,7 +19,7 @@ public class Recruiter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    private UUID recruiterId;
 
     @OneToOne
     @MapsId
