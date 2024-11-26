@@ -1,6 +1,7 @@
 package api.findev.model;
 
 import api.findev.enums.ContractType;
+import api.findev.enums.JobStatus;
 import api.findev.enums.WorkModality;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -38,10 +39,10 @@ public class Job {
     @Column(name = "expiration_date", nullable = false)
     private Date expirationDate;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Recruiter recruiter;
 
     @Column(name = "contract_type", nullable = false)

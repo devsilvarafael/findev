@@ -1,11 +1,7 @@
 package api.findev.service;
 
-import api.findev.dto.CompanyDto;
-import api.findev.dto.JobDto;
-import api.findev.dto.RecruiterDto;
-import api.findev.model.Company;
-import api.findev.model.Job;
-import api.findev.model.Recruiter;
+import api.findev.dto.request.JobRequestDto;
+import api.findev.dto.response.JobResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -14,13 +10,15 @@ import java.util.UUID;
 
 public interface JobService {
 
-    Page<JobDto> getAllJobs(Pageable pageable);
-    Page<JobDto> getAllJobsByCompany(UUID company, Pageable pageable) throws Exception;
-    Page<JobDto> getAllJobsByRecruiter(UUID recruiter, Pageable pageable);
+    Page<JobResponseDto> getAllJobs(Pageable pageable);
+    Page<JobResponseDto> getAllJobsByCompany(UUID company, Pageable pageable) throws Exception;
+    Page<JobResponseDto> getAllJobsByRecruiter(UUID recruiter, Pageable pageable);
 
-    Optional<JobDto> getJobById(UUID id) throws Exception;
-    JobDto announceNewJob(Job job);
+    Optional<JobResponseDto> getJobById(UUID id) throws Exception;
+
+    JobResponseDto announceNewJob(JobRequestDto jobRequestDto) throws Exception;
 
     void deleteJobById(UUID id) throws Exception;
-    JobDto updateJob(UUID id, Job job) throws Exception;
+
+    JobResponseDto updateJob(UUID id, JobRequestDto jobRequestDto) throws Exception;
 }
