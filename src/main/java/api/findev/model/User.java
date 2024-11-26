@@ -1,5 +1,6 @@
 package api.findev.model;
 
+import api.findev.enums.UserType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,5 +26,5 @@ public class User {
     private String password;
 
     @Column(name = "role")
-    private String role;
+    private UserType role;
 }

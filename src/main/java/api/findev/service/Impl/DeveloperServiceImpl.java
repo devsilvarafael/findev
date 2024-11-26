@@ -1,6 +1,7 @@
 package api.findev.service.Impl;
 
 import api.findev.dto.DeveloperDto;
+import api.findev.enums.UserType;
 import api.findev.exceptions.DeveloperNotFoundException;
 import api.findev.mapper.DeveloperDTOMapper;
 import api.findev.model.Developer;
@@ -105,7 +106,7 @@ public class DeveloperServiceImpl implements DeveloperService {
         User user = new User();
         user.setEmail(developer.getEmail());
         user.setPassword(developer.getPassword());
-        user.setRole("DEVELOPER");
+        user.setRole(UserType.DEVELOPER);
         User savedUser = userService.save(user);
 
         developer.setUser(savedUser);

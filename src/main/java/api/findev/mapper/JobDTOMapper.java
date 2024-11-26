@@ -28,8 +28,8 @@ public class JobDTOMapper implements Function<Job, JobDto> {
 
     @Override
     public JobDto apply(Job job) {
-        Optional<Company> companyExists = companyRepository.findById(job.getCompany());
-        Optional<Recruiter> recruiterExists = recruiterRepository.findById(job.getRecruiter());
+        Optional<Company> companyExists = companyRepository.findById(job.getCompany().getId());
+        Optional<Recruiter> recruiterExists = recruiterRepository.findById(job.getRecruiter().getRecruiterId());
 
         return new JobDto(
                 job.getId(),

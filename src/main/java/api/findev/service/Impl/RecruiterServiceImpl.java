@@ -2,6 +2,7 @@ package api.findev.service.Impl;
 
 import api.findev.dto.RecruiterCreateDto;
 import api.findev.dto.RecruiterDto;
+import api.findev.enums.UserType;
 import api.findev.exceptions.CompanyNotFoundException;
 import api.findev.exceptions.DeveloperNotFoundException;
 import api.findev.exceptions.RecruiterNotFoundException;
@@ -103,7 +104,7 @@ public class RecruiterServiceImpl implements RecruiterService {
         User user = new User();
         user.setEmail(recruiterCreateDTO.getEmail());
         user.setPassword(recruiterCreateDTO.getPassword());
-        user.setRole("RECRUITER");
+        user.setRole(UserType.RECRUITER);
 
         User savedUser = userService.save(user);
 

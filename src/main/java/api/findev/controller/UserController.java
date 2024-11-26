@@ -10,18 +10,18 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/auth")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping("")
+    @GetMapping("/users")
     public List<User> getAllUsers() {
         return userService.findAll();
     }
 
-    @PostMapping("/login")
+    @PostMapping("")
     @ResponseBody
     public UserDto login(@RequestBody LoginRequest loginRequest) {
         return userService.login(loginRequest.getEmail(), loginRequest.getPassword());

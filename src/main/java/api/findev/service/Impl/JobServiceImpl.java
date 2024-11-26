@@ -106,20 +106,20 @@ public class JobServiceImpl implements JobService {
 
 
         if (job.getCompany() != null) {
-            Optional<Company> companyOpt = companyRepository.findById(job.getCompany());
+            Optional<Company> companyOpt = companyRepository.findById(job.getCompany().getId());
             if (companyOpt.isEmpty()) {
                 throw new Exception("Company not found.");
             }
-            existingJob.setCompany(companyOpt.get().getId());
+            existingJob.setCompany(companyOpt.get());
         }
 
 
         if (job.getRecruiter() != null) {
-            Optional<Recruiter> recruiterOpt = recruiterRepository.findById(job.getRecruiter());
+            Optional<Recruiter> recruiterOpt = recruiterRepository.findById(job.getRecruiter().getRecruiterId());
             if (recruiterOpt.isEmpty()) {
                 throw new Exception("Recruiter not found.");
             }
-            existingJob.setRecruiter(recruiterOpt.get().getRecruiterId());
+            existingJob.setRecruiter(recruiterOpt.get());
         }
 
 
