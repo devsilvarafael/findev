@@ -103,6 +103,12 @@ public class DeveloperServiceImpl implements DeveloperService {
 
     @Override
     public DeveloperDto create(Developer developer) {
+        Optional<Developer> developerExists = developerRepository.findDeveloperByEmail(developer.getEmail());
+
+        if (developerExists.isPresent()) {
+            throw new IllegalArgumentException("Developer already exists");
+        }
+
         User user = new User();
         user.setEmail(developer.getEmail());
         user.setPassword(developer.getPassword());
@@ -111,10 +117,12 @@ public class DeveloperServiceImpl implements DeveloperService {
 
         developer.setUser(savedUser);
 
-        developer.getSkills().forEach(skill -> skill.setDeveloper(developer));
+        if (developer.getSkills() != null) {
+            developer.getSkills().forEach(skill -> skill.setDeveloper(developer));
+        }
+
         Developer savedDeveloper = developerRepository.save(developer);
 
         return developerDTOMapper.apply(savedDeveloper);
     }
-
 }

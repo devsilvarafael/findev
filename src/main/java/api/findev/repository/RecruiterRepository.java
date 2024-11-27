@@ -14,4 +14,5 @@ import java.util.UUID;
 
 public interface RecruiterRepository extends JpaRepository<Recruiter, UUID> {
     Page<RecruiterDto> findRecruitersByCompanyId(UUID companyId, Pageable pageable);
+    Optional<RecruiterDto> findRecruiterByEmail(String email);
 }

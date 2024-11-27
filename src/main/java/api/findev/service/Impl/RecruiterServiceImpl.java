@@ -101,6 +101,12 @@ public class RecruiterServiceImpl implements RecruiterService {
         Company company = companyRepository.findById(recruiterCreateDTO.getCompany())
                 .orElseThrow(() -> new RuntimeException("Company not found"));
 
+        Optional<RecruiterDto> recruiterExists = recruiterRepository.findRecruiterByEmail(recruiterCreateDTO.getEmail());
+
+        if (recruiterExists.isPresent()) {
+            throw new IllegalArgumentException("Recruiter email already exists");
+        }
+
         User user = new User();
         user.setEmail(recruiterCreateDTO.getEmail());
         user.setPassword(recruiterCreateDTO.getPassword());
