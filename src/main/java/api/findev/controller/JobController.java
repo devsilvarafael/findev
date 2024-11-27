@@ -52,6 +52,13 @@ public class JobController {
         JobResponseDto createdJob = jobService.announceNewJob(jobRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdJob);
     }
+
+    @PostMapping("/apply/{jobId}")
+    public ResponseEntity<JobResponseDto> applyJob(@PathVariable UUID , ) throws Exception {
+        JobResponseDto updatedJob = jobService.addCandidateToJob()
+        return ResponseEntity.status(HttpStatus.CREATED).body(jobRequestDto);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteJobById(@PathVariable UUID id) {
         try {

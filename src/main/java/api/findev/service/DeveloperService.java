@@ -10,15 +10,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface DeveloperService {
-
     Page<DeveloperDto> getAllDevelopers(Pageable pageable);
     Optional<DeveloperDto> getDeveloperById(UUID id) throws DeveloperNotFoundException;;
-
 
     void deleteById(UUID id) throws DeveloperNotFoundException;
 
     DeveloperDto updateDeveloper(UUID id, Developer developer);
 
     DeveloperDto create(Developer developer);
-
 }

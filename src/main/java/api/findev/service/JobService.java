@@ -21,4 +21,6 @@ public interface JobService {
     void deleteJobById(UUID id) throws Exception;
 
     JobResponseDto updateJob(UUID id, JobRequestDto jobRequestDto) throws Exception;
+
+    JobResponseDto addCandidateToJob(UUID developerId, UUID jobId) throws Exception;
 }

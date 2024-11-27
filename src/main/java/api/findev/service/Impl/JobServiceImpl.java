@@ -3,11 +3,9 @@ package api.findev.service.Impl;
 import api.findev.dto.request.JobRequestDto;
 import api.findev.dto.response.JobResponseDto;
 import api.findev.mapper.JobDTOMapper;
-import api.findev.model.Company;
-import api.findev.model.Job;
-import api.findev.model.JobBenefit;
-import api.findev.model.Recruiter;
+import api.findev.model.*;
 import api.findev.repository.CompanyRepository;
+import api.findev.repository.DeveloperRepository;
 import api.findev.repository.JobRepository;
 import api.findev.repository.RecruiterRepository;
 import api.findev.service.JobService;
@@ -29,12 +27,14 @@ public class JobServiceImpl implements JobService {
     private final JobRepository jobRepository;
     private final CompanyRepository companyRepository;
     private final RecruiterRepository recruiterRepository;
+    private final DeveloperRepository developerRepository;
     private final JobDTOMapper jobDTOMapper;
 
-    public JobServiceImpl(JobRepository jobRepository, CompanyRepository companyRepository, RecruiterRepository recruiterRepository, JobDTOMapper jobDTOMapper) {
+    public JobServiceImpl(JobRepository jobRepository, CompanyRepository companyRepository, RecruiterRepository recruiterRepository, DeveloperRepository developerRepository, JobDTOMapper jobDTOMapper) {
         this.jobRepository = jobRepository;
         this.companyRepository = companyRepository;
         this.recruiterRepository = recruiterRepository;
+        this.developerRepository = developerRepository;
         this.jobDTOMapper = jobDTOMapper;
     }
 
@@ -176,6 +176,26 @@ public class JobServiceImpl implements JobService {
         existingJob.getRequirements().clear();
 
         Job updatedJob = jobRepository.save(existingJob);
+        return jobDTOMapper.apply(updatedJob);
+    }
+
+    @Override
+    public JobResponseDto addCandidateToJob(UUID developerId, UUID jobId) throws Exception {
+        Optional<Job> existingJobOpt = jobRepository.findById(jobId);
+        Optional<Developer> existingCandidateOpt = developerRepository.findById(developerId);
+
+        if (existingJobOpt.isEmpty()) {
+            throw new Exception("Job not found.");
+        }
+
+        if (existingCandidateOpt.isEmpty()) {
+            throw new Exception("Candidate not found.");
+        }
+
+        existingJobOpt.get().getCandidates().add(existingCandidateOpt.get());
+
+        Job updatedJob = jobRepository.save(existingJobOpt.get());
+
         return jobDTOMapper.apply(updatedJob);
     }
 }
