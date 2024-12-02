@@ -1,6 +1,7 @@
 package api.findev.controller;
 
 import api.findev.dto.DeveloperDto;
+import api.findev.dto.request.DeveloperWithSkillsDto;
 import api.findev.model.Developer;
 import api.findev.service.DeveloperService;
 import jakarta.validation.Valid;
@@ -36,8 +37,19 @@ public class DeveloperController {
     }
 
     @PostMapping
-    public ResponseEntity<DeveloperDto> saveNewDeveloper(@RequestBody @Valid Developer developer) {
-        DeveloperDto createdDeveloperDto = developerService.create(developer);
+    public ResponseEntity<DeveloperDto> saveNewDeveloper(@RequestBody @Valid DeveloperWithSkillsDto developerWithSkillsDto) {
+        Developer developer = new Developer();
+        developer.setFirstName(developerWithSkillsDto.getFirstName());
+        developer.setLastName(developerWithSkillsDto.getLastName());
+        developer.setEmail(developerWithSkillsDto.getEmail());
+        developer.setPhone(developerWithSkillsDto.getPhone());
+        developer.setPassword(developerWithSkillsDto.getPassword());
+        developer.setPortfolio(developerWithSkillsDto.getPortfolio());
+        developer.setSeniority(developerWithSkillsDto.getSeniority());
+        developer.setStatus(developerWithSkillsDto.isStatus());
+
+        DeveloperDto createdDeveloperDto = developerService.create(developer, developerWithSkillsDto.getSkills());
+
         return ResponseEntity.status(HttpStatus.CREATED).body(createdDeveloperDto);
     }
 

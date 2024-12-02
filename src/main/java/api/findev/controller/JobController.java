@@ -3,6 +3,7 @@ package api.findev.controller;
 import api.findev.dto.request.ApplyJobRequest;
 import api.findev.dto.request.JobRequestDto;
 import api.findev.dto.response.JobResponseDto;
+import api.findev.model.Job;
 import api.findev.service.JobService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -67,10 +68,10 @@ public class JobController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteJobById(@PathVariable UUID id) {
+    public ResponseEntity<String> deleteJobById(@PathVariable UUID id) {
         try {
             jobService.deleteJobById(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.status(HttpStatus.OK).body("Vaga excluída com sucesso!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

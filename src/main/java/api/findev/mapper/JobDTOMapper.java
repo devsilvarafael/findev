@@ -6,10 +6,8 @@ import api.findev.dto.RecruiterDto;
 import api.findev.dto.SkillDto;
 import api.findev.dto.response.JobBenefitDto;
 import api.findev.dto.response.JobResponseDto;
-import api.findev.model.Developer;
-import api.findev.model.Job;
-import api.findev.model.JobBenefit;
-import api.findev.model.Skill;
+import api.findev.dto.response.SkillExperienceDto;
+import api.findev.model.*;
 import api.findev.repository.CompanyRepository;
 import api.findev.repository.RecruiterRepository;
 import org.springframework.stereotype.Service;
@@ -90,8 +88,18 @@ public class JobDTOMapper implements Function<Job, JobResponseDto> {
                 developer.getPhone(),
                 developer.getPortfolio(),
                 developer.getSeniority(),
-                developer.getSkills()
-                        .stream().map(skill -> new SkillDto(skill.getName(), skill.getExperienceYears())).toList());
+                developer.getSkills().stream()
+                        .map(this::mapToSkillExperienceDto)
+                        .collect(Collectors.toList())
+                );
+    }
+
+    private SkillExperienceDto mapToSkillExperienceDto(DeveloperSkill developerSkill) {
+        return new SkillExperienceDto(
+                developerSkill.getSkill().getId(),
+                developerSkill.getSkill().getName(),
+                developerSkill.getExperienceYears()
+        );
     }
 
     @Override

@@ -57,12 +57,6 @@ public class Developer {
     @Column(name = "status", nullable = false)
     private boolean status = true;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "tb_developer_skill",
-            joinColumns = @JoinColumn(name = "developer_id"),
-            inverseJoinColumns = @JoinColumn(name = "skill_id")
-    )
-    private List<Skill> skills = new ArrayList<>();
-
+    @OneToMany(mappedBy = "developer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DeveloperSkill> skills = new ArrayList<>();
 }

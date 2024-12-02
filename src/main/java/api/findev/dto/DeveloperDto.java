@@ -1,5 +1,7 @@
 package api.findev.dto;
 
+import api.findev.dto.response.SkillExperienceDto;
+import api.findev.model.DeveloperSkill;
 import api.findev.model.Skill;
 
 import java.util.List;
@@ -13,7 +15,7 @@ public record DeveloperDto (
         String phone,
         String portfolio,
         int seniority,
-        List<SkillDto> skills
+        List<SkillExperienceDto> skills
 ){
 
 }

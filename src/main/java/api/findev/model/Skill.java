@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 
 @Data
 @AllArgsConstructor
@@ -16,5 +18,7 @@ public class Skill {
     private Long id;
 
     private String name;
-    private int experienceYears;
+
+    @OneToMany(mappedBy = "skill", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DeveloperSkill> developerSkills;
 }

@@ -15,7 +15,7 @@ import java.util.UUID;
 public class DeveloperSkill {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "developer_id", nullable = false)

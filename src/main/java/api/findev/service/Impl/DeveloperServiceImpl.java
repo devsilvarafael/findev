@@ -1,13 +1,17 @@
 package api.findev.service.Impl;
 
 import api.findev.dto.DeveloperDto;
+import api.findev.dto.response.SkillExperienceDto;
 import api.findev.enums.UserType;
 import api.findev.exceptions.DeveloperNotFoundException;
 import api.findev.mapper.DeveloperDTOMapper;
 import api.findev.model.Developer;
+import api.findev.model.DeveloperSkill;
 import api.findev.model.Skill;
 import api.findev.model.User;
 import api.findev.repository.DeveloperRepository;
+import api.findev.repository.DeveloperSkillRepository;
+import api.findev.repository.SkillRepository;
 import api.findev.service.DeveloperService;
 import api.findev.service.UserService;
 import org.springframework.data.domain.Page;
@@ -26,11 +30,21 @@ public class DeveloperServiceImpl implements DeveloperService {
     private final DeveloperRepository developerRepository;
     private final UserService userService;
     private final DeveloperDTOMapper developerDTOMapper;
+    private final SkillRepository skillRepository;
+    private final DeveloperSkillRepository developerSkillRepository;
 
-    public DeveloperServiceImpl(DeveloperRepository developerRepository, UserService userService, DeveloperDTOMapper developerDTOMapper) {
+    public DeveloperServiceImpl(
+            DeveloperRepository developerRepository,
+            UserService userService,
+            DeveloperDTOMapper developerDTOMapper,
+            SkillRepository skillRepository,
+            DeveloperSkillRepository developerSkillRepository
+    ) {
         this.developerRepository = developerRepository;
         this.userService = userService;
         this.developerDTOMapper = developerDTOMapper;
+        this.skillRepository = skillRepository;
+        this.developerSkillRepository = developerSkillRepository;
     }
 
     @Override
@@ -65,7 +79,6 @@ public class DeveloperServiceImpl implements DeveloperService {
         Developer existingDeveloper = developerRepository.findById(id)
                 .orElseThrow(() -> new DeveloperNotFoundException("Developer not found"));
 
-        // Update all fields if they are not null
         if (developerDto.getFirstName() != null) {
             existingDeveloper.setFirstName(developerDto.getFirstName());
         }
@@ -84,13 +97,7 @@ public class DeveloperServiceImpl implements DeveloperService {
         if (developerDto.getPortfolio() != null) {
             existingDeveloper.setPortfolio(developerDto.getPortfolio());
         }
-//        if (developerDto.getSkills() != null) {
-//            existingDeveloper.getSkills().clear();
-//            for (Skill skill : developerDto.getSkills()) {
-//                skill.setDeveloper(existingDeveloper);
-//                existingDeveloper.getSkills().add(skill);
-//            }
-//        }
+
         existingDeveloper.setSeniority(developerDto.getSeniority());
         existingDeveloper.setStatus(developerDto.isStatus());
 
@@ -99,10 +106,14 @@ public class DeveloperServiceImpl implements DeveloperService {
         return developerDTOMapper.apply(updatedDeveloper);
     }
 
+    @Override
+    public Optional<Developer> findByIdWithSkills(UUID developerId) {
+        return developerRepository.findByIdWithSkills(developerId);
+    }
 
 
     @Override
-    public DeveloperDto create(Developer developer) {
+    public DeveloperDto create(Developer developer, List<SkillExperienceDto> skillsWithExperience) {
         Optional<Developer> developerExists = developerRepository.findDeveloperByEmail(developer.getEmail());
 
         if (developerExists.isPresent()) {
@@ -117,11 +128,23 @@ public class DeveloperServiceImpl implements DeveloperService {
 
         developer.setUser(savedUser);
 
-//        if (developer.getSkills() != null) {
-//            developer.getSkills().forEach(skill -> skill.setDeveloper(developer));
-//        }
-
         Developer savedDeveloper = developerRepository.save(developer);
+
+        List<DeveloperSkill> developerSkills = skillsWithExperience.stream()
+                .map(skillExperience -> {
+                    Skill skill = skillRepository.findById(skillExperience.getSkillId())
+                            .orElseThrow(() -> new IllegalArgumentException("Skill not found"));
+
+                    DeveloperSkill developerSkill = new DeveloperSkill();
+                    developerSkill.setDeveloper(savedDeveloper);
+                    developerSkill.setSkill(skill);
+                    developerSkill.setExperienceYears(skillExperience.getExperienceYears());
+
+                    return developerSkill;
+                })
+                .collect(Collectors.toList());
+
+        developerSkillRepository.saveAll(developerSkills);
 
         return developerDTOMapper.apply(savedDeveloper);
     }
