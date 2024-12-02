@@ -6,6 +6,7 @@ import api.findev.dto.RecruiterDto;
 import api.findev.dto.request.JobBenefitRequestDto;
 import api.findev.enums.ContractType;
 import api.findev.enums.WorkModality;
+import api.findev.model.JobRequirement;
 
 import java.util.Date;
 import java.util.List;
@@ -23,9 +24,10 @@ public record JobResponseDto(
         int maxWeekHours,
         WorkModality workModality,
         String workLocation,
-        CompanyDto jobCompany,
-        RecruiterDto jobRecruiter,
+        CompanyDto company,
+        RecruiterDto recruiter,
         List<JobBenefitDto> benefits,
-        List<DeveloperDto> candidates
+        List<DeveloperDto> candidates,
+        List<JobRequirementDto> requirements
 ) {
 }

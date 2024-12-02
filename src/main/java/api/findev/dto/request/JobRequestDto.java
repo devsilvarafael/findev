@@ -1,5 +1,6 @@
 package api.findev.dto.request;
 
+import api.findev.dto.response.JobRequirementDto;
 import api.findev.enums.ContractType;
 import api.findev.enums.WorkModality;
 
@@ -21,7 +22,7 @@ public record JobRequestDto(
         WorkModality workModality,
         String workLocation,
         List<JobBenefitRequestDto> benefits,
-        List<UUID> requirements,
+        List<JobRequirementDto> requirements,
         List<UUID> candidates
 ) {
 }

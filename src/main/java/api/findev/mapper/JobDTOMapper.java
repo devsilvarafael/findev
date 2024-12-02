@@ -3,8 +3,8 @@ package api.findev.mapper;
 import api.findev.dto.CompanyDto;
 import api.findev.dto.DeveloperDto;
 import api.findev.dto.RecruiterDto;
-import api.findev.dto.SkillDto;
 import api.findev.dto.response.JobBenefitDto;
+import api.findev.dto.response.JobRequirementDto;
 import api.findev.dto.response.JobResponseDto;
 import api.findev.dto.response.SkillExperienceDto;
 import api.findev.model.*;
@@ -71,6 +71,9 @@ public class JobDTOMapper implements Function<Job, JobResponseDto> {
                         .collect(Collectors.toList()),
                 job.getCandidates().stream()
                         .map(this::mapToDeveloperDto)
+                        .collect(Collectors.toList()),
+                job.getRequirements().stream()
+                        .map(this::mapToRequirementDto)
                         .collect(Collectors.toList())
         );
     }
@@ -92,6 +95,10 @@ public class JobDTOMapper implements Function<Job, JobResponseDto> {
                         .map(this::mapToSkillExperienceDto)
                         .collect(Collectors.toList())
                 );
+    }
+
+    private JobRequirementDto mapToRequirementDto(JobRequirement jobRequirement) {
+        return new JobRequirementDto(jobRequirement.getName(), jobRequirement.getExperienceYears());
     }
 
     private SkillExperienceDto mapToSkillExperienceDto(DeveloperSkill developerSkill) {

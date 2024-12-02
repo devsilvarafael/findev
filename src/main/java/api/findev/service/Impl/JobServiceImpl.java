@@ -89,14 +89,12 @@ public class JobServiceImpl implements JobService {
         job.setExpirationDate(jobRequestDto.expirationDate());
         job.setCompany(companyOpt.get());
         job.setRecruiter(recruiterOpt.get());
-
         job.setContractType(jobRequestDto.contractType());
         job.setMinWeekHours(jobRequestDto.minWeekHours());
         job.setMaxWeekHours(jobRequestDto.maxWeekHours());
         job.setWorkModality(jobRequestDto.workModality());
         job.setWorkLocation(jobRequestDto.workLocation());
 
-        job.getBenefits().clear();
         if (jobRequestDto.benefits() != null) {
             jobRequestDto.benefits().forEach(benefitDto -> {
                 JobBenefit jobBenefit = new JobBenefit();
@@ -106,31 +104,27 @@ public class JobServiceImpl implements JobService {
             });
         }
 
-        job.getRequirements().clear();
+        if (jobRequestDto.requirements() != null) {
+            jobRequestDto.requirements().forEach(requirementDto -> {
+                    if (requirementDto.getName() == null) {
+                        throw new IllegalArgumentException("Requirement name cannot be null.");
+                    }
 
-        // Save the job
+                    if (requirementDto.getExperienceYears() == 0) {
+                        throw new IllegalArgumentException("Experience years cannot be zero.");
+                    }
+
+                JobRequirement jobRequirement = new JobRequirement();
+                jobRequirement.setName(requirementDto.getName());
+                jobRequirement.setExperienceYears(requirementDto.getExperienceYears());
+                jobRequirement.setJob(job);
+                job.getRequirements().add(jobRequirement);
+            });
+        }
+
         Job newJob = jobRepository.save(job);
+
         return jobDTOMapper.apply(newJob);
-    }
-
-
-
-
-    private static Job getJob(JobRequestDto jobRequestDto, Optional<Company> companyOpt, Optional<Recruiter> recruiterOpt) {
-        Job job = new Job();
-        job.setTitle(jobRequestDto.title());
-        job.setDescription(jobRequestDto.description());
-        job.setStatus(jobRequestDto.status());
-        job.setSalary(jobRequestDto.salary());
-        job.setExpirationDate(jobRequestDto.expirationDate());
-        job.setCompany(companyOpt.get());
-        job.setRecruiter(recruiterOpt.get());
-        job.setContractType(jobRequestDto.contractType());
-        job.setMinWeekHours(jobRequestDto.minWeekHours());
-        job.setMaxWeekHours(jobRequestDto.maxWeekHours());
-        job.setWorkModality(jobRequestDto.workModality());
-        job.setWorkLocation(jobRequestDto.workLocation());
-        return job;
     }
 
     @Override
@@ -141,7 +135,7 @@ public class JobServiceImpl implements JobService {
         }
         jobRepository.deleteById(id);
     }
-    
+
     @Override
     public JobResponseDto updateJob(UUID id, JobRequestDto jobRequestDto) throws Exception {
         Optional<Job> existingJobOpt = jobRepository.findById(id);
@@ -150,6 +144,7 @@ public class JobServiceImpl implements JobService {
         }
 
         Job existingJob = existingJobOpt.get();
+
         existingJob.setTitle(jobRequestDto.title());
         existingJob.setDescription(jobRequestDto.description());
         existingJob.setStatus(jobRequestDto.status());
@@ -173,11 +168,31 @@ public class JobServiceImpl implements JobService {
         }
 
         existingJob.getBenefits().clear();
+        if (jobRequestDto.benefits() != null) {
+            jobRequestDto.benefits().forEach(benefitDto -> {
+                JobBenefit jobBenefit = new JobBenefit();
+                jobBenefit.setBenefit(benefitDto.toString());
+                jobBenefit.setJob(existingJob);
+                existingJob.getBenefits().add(jobBenefit);
+            });
+        }
+
         existingJob.getRequirements().clear();
+        if (jobRequestDto.requirements() != null) {
+            jobRequestDto.requirements().forEach(requirementDto -> {
+                JobRequirement jobRequirement = new JobRequirement();
+                jobRequirement.setName(requirementDto.getName());
+                jobRequirement.setExperienceYears(requirementDto.getExperienceYears());
+                jobRequirement.setJob(existingJob);
+                existingJob.getRequirements().add(jobRequirement);
+            });
+        }
 
         Job updatedJob = jobRepository.save(existingJob);
+
         return jobDTOMapper.apply(updatedJob);
     }
+
 
     @Override
     public JobResponseDto addCandidateToJob(UUID developerId, UUID jobId) throws Exception {

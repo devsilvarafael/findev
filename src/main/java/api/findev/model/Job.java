@@ -64,7 +64,7 @@ public class Job {
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JobBenefit> benefits = new ArrayList<>();
 
-    @OneToMany()
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JobRequirement> requirements = new ArrayList<>();
 
     @OneToMany(mappedBy = "", cascade = CascadeType.ALL, orphanRemoval = true)
