@@ -1,5 +1,6 @@
 package api.findev.controller;
 
+import api.findev.dto.request.ApplyJobRequest;
 import api.findev.dto.request.JobRequestDto;
 import api.findev.dto.response.JobResponseDto;
 import api.findev.service.JobService;
@@ -54,10 +55,16 @@ public class JobController {
     }
 
     @PostMapping("/apply/{jobId}")
-    public ResponseEntity<JobResponseDto> applyJob(@PathVariable UUID jobId, @RequestParam UUID developerId ) throws Exception {
-        JobResponseDto updatedJob = jobService.addCandidateToJob(jobId, developerId);
+    public ResponseEntity<JobResponseDto> applyJob(
+            @PathVariable UUID jobId,
+            @RequestBody ApplyJobRequest applyJobRequest) throws Exception {
+
+        UUID developerId = applyJobRequest.getDeveloperId();
+        JobResponseDto updatedJob = jobService.addCandidateToJob(developerId, jobId);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(updatedJob);
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteJobById(@PathVariable UUID id) {
