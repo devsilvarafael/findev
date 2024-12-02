@@ -182,7 +182,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public JobResponseDto addCandidateToJob(UUID developerId, UUID jobId) throws Exception {
         Optional<Job> existingJobOpt = jobRepository.findById(jobId);
-        Optional<Developer> existingCandidateOpt = developerRepository.findById(developerId);
+        Optional<Developer> existingCandidateOpt = developerRepository.findByIdWithSkills(developerId);
 
         if (existingJobOpt.isEmpty()) {
             throw new Exception("Job not found.");
@@ -192,10 +192,13 @@ public class JobServiceImpl implements JobService {
             throw new Exception("Candidate not found.");
         }
 
-        existingJobOpt.get().getCandidates().add(existingCandidateOpt.get());
+        Job job = existingJobOpt.get();
+        Developer developer = existingCandidateOpt.get();
 
-        Job updatedJob = jobRepository.save(existingJobOpt.get());
+        job.getCandidates().add(developer);
+        Job updatedJob = jobRepository.save(job);
 
         return jobDTOMapper.apply(updatedJob);
     }
+
 }

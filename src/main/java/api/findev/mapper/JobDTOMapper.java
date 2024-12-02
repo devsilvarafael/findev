@@ -3,11 +3,13 @@ package api.findev.mapper;
 import api.findev.dto.CompanyDto;
 import api.findev.dto.DeveloperDto;
 import api.findev.dto.RecruiterDto;
+import api.findev.dto.SkillDto;
 import api.findev.dto.response.JobBenefitDto;
 import api.findev.dto.response.JobResponseDto;
 import api.findev.model.Developer;
 import api.findev.model.Job;
 import api.findev.model.JobBenefit;
+import api.findev.model.Skill;
 import api.findev.repository.CompanyRepository;
 import api.findev.repository.RecruiterRepository;
 import org.springframework.stereotype.Service;
@@ -80,7 +82,16 @@ public class JobDTOMapper implements Function<Job, JobResponseDto> {
     }
 
     private DeveloperDto mapToDeveloperDto(Developer developer) {
-        return new DeveloperDto(developer.getId(), developer.getFirstName(), developer.getLastName(), developer.getEmail(), developer.getPhone(), developer.getPortfolio(), developer.getSeniority(), null);
+        return new DeveloperDto(
+                developer.getId(),
+                developer.getFirstName(),
+                developer.getLastName(),
+                developer.getEmail(),
+                developer.getPhone(),
+                developer.getPortfolio(),
+                developer.getSeniority(),
+                developer.getSkills()
+                        .stream().map(skill -> new SkillDto(skill.getName(), skill.getExperienceYears())).toList());
     }
 
     @Override

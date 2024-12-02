@@ -6,6 +6,7 @@ import api.findev.model.Developer;
 import api.findev.model.Skill;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -23,16 +24,9 @@ public class DeveloperDTOMapper implements Function<Developer, DeveloperDto> {
                 developer.getPortfolio(),
                 developer.getSeniority(),
                 developer.getSkills().stream()
-                        .map(this::mapToSkillDto)
+                        .map(skill -> new SkillDto(skill.getName(), skill.getExperienceYears()))
                         .collect(Collectors.toList())
         );
-    }
-
-    private SkillDto mapToSkillDto(Skill skill) {
-        SkillDto skillDto = new SkillDto();
-        skillDto.setName(skill.getName());
-        skillDto.setExperienceYears(skill.getExperienceYears());
-        return skillDto;
     }
 
     @Override

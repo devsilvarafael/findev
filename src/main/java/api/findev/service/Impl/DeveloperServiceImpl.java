@@ -84,13 +84,13 @@ public class DeveloperServiceImpl implements DeveloperService {
         if (developerDto.getPortfolio() != null) {
             existingDeveloper.setPortfolio(developerDto.getPortfolio());
         }
-        if (developerDto.getSkills() != null) {
-            existingDeveloper.getSkills().clear();
-            for (Skill skill : developerDto.getSkills()) {
-                skill.setDeveloper(existingDeveloper);
-                existingDeveloper.getSkills().add(skill);
-            }
-        }
+//        if (developerDto.getSkills() != null) {
+//            existingDeveloper.getSkills().clear();
+//            for (Skill skill : developerDto.getSkills()) {
+//                skill.setDeveloper(existingDeveloper);
+//                existingDeveloper.getSkills().add(skill);
+//            }
+//        }
         existingDeveloper.setSeniority(developerDto.getSeniority());
         existingDeveloper.setStatus(developerDto.isStatus());
 
@@ -117,9 +117,9 @@ public class DeveloperServiceImpl implements DeveloperService {
 
         developer.setUser(savedUser);
 
-        if (developer.getSkills() != null) {
-            developer.getSkills().forEach(skill -> skill.setDeveloper(developer));
-        }
+//        if (developer.getSkills() != null) {
+//            developer.getSkills().forEach(skill -> skill.setDeveloper(developer));
+//        }
 
         Developer savedDeveloper = developerRepository.save(developer);
 

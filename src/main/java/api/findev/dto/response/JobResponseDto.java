@@ -23,8 +23,8 @@ public record JobResponseDto(
         int maxWeekHours,
         WorkModality workModality,
         String workLocation,
-        CompanyDto company,
-        RecruiterDto recruiter,
+        CompanyDto jobCompany,
+        RecruiterDto jobRecruiter,
         List<JobBenefitDto> benefits,
         List<DeveloperDto> candidates
 ) {

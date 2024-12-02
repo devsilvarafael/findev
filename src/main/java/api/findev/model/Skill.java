@@ -15,11 +15,6 @@ public class Skill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "developer_id")
-    @JsonIgnore
-    private Developer developer;
-
     private String name;
     private int experienceYears;
 }
