@@ -23,4 +23,6 @@ public interface JobService {
     JobResponseDto updateJob(UUID id, JobRequestDto jobRequestDto) throws Exception;
 
     JobResponseDto addCandidateToJob(UUID developerId, UUID jobId) throws Exception;
+    Page<JobResponseDto> getMatchingJobsForDeveloper(UUID developerId, Pageable pageable) throws Exception;
+    void removeCandidateFromJob(UUID developerId, UUID jobId) throws Exception;
 }

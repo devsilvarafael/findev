@@ -216,4 +216,48 @@ public class JobServiceImpl implements JobService {
         return jobDTOMapper.apply(updatedJob);
     }
 
+    @Override
+    public Page<JobResponseDto> getMatchingJobsForDeveloper(UUID developerId, Pageable pageable) throws Exception {
+        Optional<Developer> developerOpt = developerRepository.findByIdWithSkills(developerId);
+
+        if (developerOpt.isEmpty()) {
+            throw new Exception("Developer not found.");
+        }
+
+        Developer developer = developerOpt.get();
+        List<DeveloperSkill> developerSkills = developer.getSkills();
+
+        List<JobResponseDto> matchingJobs = jobRepository.findAll().stream()
+                .filter(job -> job.getRequirements().stream()
+                        .allMatch(requirement ->
+                                developerSkills.stream().anyMatch(skill ->
+                                        skill.getSkill().getName().equalsIgnoreCase(requirement.getName()) &&
+                                                skill.getExperienceYears() >= requirement.getExperienceYears())))
+                .map(jobDTOMapper)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(matchingJobs, pageable, matchingJobs.size());
+    }
+
+    @Override
+    public void removeCandidateFromJob(UUID developerId, UUID jobId) throws Exception {
+        Optional<Job> jobOpt = jobRepository.findById(jobId);
+        if (jobOpt.isEmpty()) {
+            throw new Exception("Job not found.");
+        }
+        Job job = jobOpt.get();
+
+        Optional<Developer> developerOpt = developerRepository.findById(developerId);
+        if (developerOpt.isEmpty()) {
+            throw new Exception("Developer not found.");
+        }
+        Developer developer = developerOpt.get();
+
+        boolean removed = job.getCandidates().remove(developer);
+        if (!removed) {
+            throw new Exception("Developer is not a candidate for this job.");
+        }
+
+        jobRepository.save(job);
+    }
 }

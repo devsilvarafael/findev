@@ -86,4 +86,29 @@ public class JobController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
+    @GetMapping("/matching")
+    public ResponseEntity<Page<JobResponseDto>> getMatchingJobs(
+            @RequestParam UUID developerId,
+            Pageable pageable) {
+        try {
+            Page<JobResponseDto> matchingJobs = jobService.getMatchingJobsForDeveloper(developerId, pageable);
+            return ResponseEntity.ok(matchingJobs);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Page.empty());
+        }
+    }
+
+    @DeleteMapping("/{jobId}/candidates/{developerId}")
+    public ResponseEntity<Void> removeCandidateFromJob(
+            @PathVariable UUID jobId,
+            @PathVariable UUID developerId) {
+        try {
+            jobService.removeCandidateFromJob(developerId, jobId);
+            return ResponseEntity.noContent().build(); // HTTP 204
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
 }
