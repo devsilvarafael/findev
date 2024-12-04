@@ -112,7 +112,7 @@ public class RecruiterServiceImpl implements RecruiterService {
 
         User user = new User();
         user.setEmail(recruiterCreateDTO.getEmail());
-        user.setPassword(passwordEncoder.encode(recruiterCreateDTO.getPassword()));
+        user.setPassword(recruiterCreateDTO.getPassword());
         user.setRole(UserType.RECRUITER);
 
         User savedUser = userService.save(user);
