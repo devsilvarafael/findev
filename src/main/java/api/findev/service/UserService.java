@@ -12,6 +12,4 @@ public interface UserService {
 
     void deleteUser(UUID id);
     List<User> findAll();
-
-    UserDto login(String email, String password);
 }

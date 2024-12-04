@@ -17,6 +17,7 @@ import api.findev.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,13 +33,15 @@ public class RecruiterServiceImpl implements RecruiterService {
 
     private final UserService userService;
     private final RecruiterDTOMapper recruiterDTOMapper;
+    private final PasswordEncoder passwordEncoder;
 
 
-    public RecruiterServiceImpl(RecruiterRepository recruiterRepository, UserService userService, CompanyRepository companyRepository, RecruiterDTOMapper recruiterDTOMapper) {
+    public RecruiterServiceImpl(RecruiterRepository recruiterRepository, UserService userService, CompanyRepository companyRepository, RecruiterDTOMapper recruiterDTOMapper, PasswordEncoder passwordEncoder) {
         this.recruiterRepository = recruiterRepository;
         this.recruiterDTOMapper = recruiterDTOMapper;
         this.userService = userService;
         this.companyRepository = companyRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -109,7 +112,7 @@ public class RecruiterServiceImpl implements RecruiterService {
 
         User user = new User();
         user.setEmail(recruiterCreateDTO.getEmail());
-        user.setPassword(recruiterCreateDTO.getPassword());
+        user.setPassword(passwordEncoder.encode(recruiterCreateDTO.getPassword()));
         user.setRole(UserType.RECRUITER);
 
         User savedUser = userService.save(user);

@@ -17,6 +17,7 @@ import api.findev.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,19 +33,21 @@ public class DeveloperServiceImpl implements DeveloperService {
     private final DeveloperDTOMapper developerDTOMapper;
     private final SkillRepository skillRepository;
     private final DeveloperSkillRepository developerSkillRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public DeveloperServiceImpl(
             DeveloperRepository developerRepository,
             UserService userService,
             DeveloperDTOMapper developerDTOMapper,
             SkillRepository skillRepository,
-            DeveloperSkillRepository developerSkillRepository
-    ) {
+            DeveloperSkillRepository developerSkillRepository,
+            PasswordEncoder passwordEncoder) {
         this.developerRepository = developerRepository;
         this.userService = userService;
         this.developerDTOMapper = developerDTOMapper;
         this.skillRepository = skillRepository;
         this.developerSkillRepository = developerSkillRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -122,7 +125,7 @@ public class DeveloperServiceImpl implements DeveloperService {
 
         User user = new User();
         user.setEmail(developer.getEmail());
-        user.setPassword(developer.getPassword());
+        user.setPassword(passwordEncoder.encode(developer.getPassword()));
         user.setRole(UserType.DEVELOPER);
         User savedUser = userService.save(user);
 

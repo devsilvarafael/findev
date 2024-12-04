@@ -44,24 +44,4 @@ public class UserServiceImpl implements UserService {
     public List<User> findAll() {
         return userRepository.findAll();
     }
-
-    @Override
-    public UserDto login(String email, String password) {
-        User user = userRepository.findByEmail(email);
-
-        if (user == null) {
-            throw new RuntimeException("User not found");
-        }
-
-        if (!user.getPassword().equals(password)) {
-            throw new RuntimeException("Invalid password");
-        }
-
-        System.out.printf("Logado!");
-        System.out.println(user);
-
-        return userDTOMapper.apply(user);
-    }
-
-
 }
