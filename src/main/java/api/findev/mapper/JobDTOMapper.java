@@ -1,7 +1,6 @@
 package api.findev.mapper;
 
 import api.findev.dto.CompanyDto;
-import api.findev.dto.DeveloperDto;
 import api.findev.dto.RecruiterDto;
 import api.findev.dto.response.*;
 import api.findev.model.*;
@@ -14,16 +13,20 @@ import java.util.stream.Collectors;
 
 @Service
 public class JobDTOMapper implements Function<Job, JobResponseDto> {
-
     private final RecruiterRepository recruiterRepository;
     private final CompanyRepository companyRepository;
+    private final JobCandidatureDTOMapper jobCandidatureDTOMapper;
 
-    public JobDTOMapper(RecruiterRepository recruiterRepository, CompanyRepository companyRepository) {
+    public JobDTOMapper(
+            RecruiterRepository recruiterRepository,
+            CompanyRepository companyRepository,
+            JobCandidatureDTOMapper jobCandidatureDTOMapper
+    ) {
         this.recruiterRepository = recruiterRepository;
         this.companyRepository = companyRepository;
+        this.jobCandidatureDTOMapper = jobCandidatureDTOMapper;
     }
 
-    @Override
     public JobResponseDto apply(Job job) {
         CompanyDto companyDto = companyRepository.findById(job.getCompany().getId())
                 .map(company -> new CompanyDto(
@@ -67,8 +70,8 @@ public class JobDTOMapper implements Function<Job, JobResponseDto> {
                         .map(this::mapToJobBenefitDto)
                         .collect(Collectors.toList()),
                 job.getCandidates().stream()
-                        .map(this::mapToCandidatureDto)
-                        .collect(Collectors.toList()), // Updated mapping
+                        .map(jobCandidatureDTOMapper::apply)
+                        .collect(Collectors.toList()),
                 job.getRequirements().stream()
                         .map(this::mapToRequirementDto)
                         .collect(Collectors.toList())
@@ -79,34 +82,7 @@ public class JobDTOMapper implements Function<Job, JobResponseDto> {
         return new JobBenefitDto(jobBenefit.getBenefit());
     }
 
-    private CandidatureDto mapToCandidatureDto(JobCandidature jobCandidate) {
-        Developer developer = jobCandidate.getDeveloper();
-
-        DeveloperDto developerDto = new DeveloperDto(
-                developer.getId(),
-                developer.getFirstName(),
-                developer.getLastName(),
-                developer.getEmail(),
-                developer.getPhone(),
-                developer.getPortfolio(),
-                developer.getSeniority(),
-                developer.getSkills().stream()
-                        .map(this::mapToSkillExperienceDto)
-                        .collect(Collectors.toList())
-        );
-
-        return new CandidatureDto(jobCandidate.getId(), developerDto, jobCandidate.getStatus().toString());
-    }
-
     private JobRequirementDto mapToRequirementDto(JobRequirement jobRequirement) {
         return new JobRequirementDto(jobRequirement.getName(), jobRequirement.getExperienceYears());
-    }
-
-    private SkillExperienceDto mapToSkillExperienceDto(DeveloperSkill developerSkill) {
-        return new SkillExperienceDto(
-                developerSkill.getSkill().getId(),
-                developerSkill.getSkill().getName(),
-                developerSkill.getExperienceYears()
-        );
     }
 }

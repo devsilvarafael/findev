@@ -2,8 +2,11 @@ package api.findev.controller;
 
 import api.findev.dto.DeveloperDto;
 import api.findev.dto.request.DeveloperWithSkillsDto;
+import api.findev.dto.response.CandidatureDto;
+import api.findev.dto.response.JobCandidateCompleteDto;
 import api.findev.model.Developer;
 import api.findev.service.DeveloperService;
+import api.findev.service.JobCandidatureService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,10 +22,11 @@ import java.util.UUID;
 @RestController
 @RequestMapping(value = "/api/developers")
 public class DeveloperController {
-
     final DeveloperService developerService;
 
-    public DeveloperController(DeveloperService developerService) {
+    public DeveloperController(
+            DeveloperService developerService
+    ) {
         this.developerService = developerService;
     }
 
