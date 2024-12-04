@@ -1,3 +1,5 @@
 package api.findev.dto;
 
-public record AuthResponseDto (String name, String token) { }
+import java.util.UUID;
+
+public record AuthResponseDto (String name, String token, UUID id) { }
