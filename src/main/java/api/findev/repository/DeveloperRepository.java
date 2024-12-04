@@ -15,4 +15,5 @@ public interface DeveloperRepository extends JpaRepository<Developer, UUID> {
     @Query("SELECT d FROM Developer d LEFT JOIN FETCH d.skills WHERE d.id = :developerId")
     Optional<Developer> findByIdWithSkills(@Param("developerId") UUID developerId);
 
+    Optional<Developer> findById(UUID developerId);
 }

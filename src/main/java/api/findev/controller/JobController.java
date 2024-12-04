@@ -3,7 +3,6 @@ package api.findev.controller;
 import api.findev.dto.request.ApplyJobRequest;
 import api.findev.dto.request.JobRequestDto;
 import api.findev.dto.response.JobResponseDto;
-import api.findev.model.Job;
 import api.findev.service.JobService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -55,23 +54,32 @@ public class JobController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdJob);
     }
 
-    @PostMapping("/apply/{jobId}")
-    public ResponseEntity<JobResponseDto> applyJob(
-            @PathVariable UUID jobId,
-            @RequestBody ApplyJobRequest applyJobRequest) throws Exception {
-
-        UUID developerId = applyJobRequest.getDeveloperId();
-        JobResponseDto updatedJob = jobService.addCandidateToJob(developerId, jobId);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(updatedJob);
+    // New endpoint to apply to a job
+    @PostMapping("/{jobId}/apply")
+    public ResponseEntity<String> applyToJob(@PathVariable UUID jobId, @RequestBody ApplyJobRequest applyJobRequest) {
+        try {
+            jobService.applyToJob(applyJobRequest.getDeveloperId(), jobId);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Application successful.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
+    @DeleteMapping("/{jobId}/unapply/{developerId}")
+    public ResponseEntity<String> unapplyFromJob(@PathVariable UUID jobId, @PathVariable UUID developerId) {
+        try {
+            jobService.unapplyFromJob(developerId, jobId);
+            return ResponseEntity.status(HttpStatus.OK).body("Unapplied successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteJobById(@PathVariable UUID id) {
         try {
             jobService.deleteJobById(id);
-            return ResponseEntity.status(HttpStatus.OK).body("Vaga excluída com sucesso!");
+            return ResponseEntity.status(HttpStatus.OK).body("Job deleted successfully.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -98,17 +106,4 @@ public class JobController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Page.empty());
         }
     }
-
-    @DeleteMapping("/{jobId}/candidates/{developerId}")
-    public ResponseEntity<Void> removeCandidateFromJob(
-            @PathVariable UUID jobId,
-            @PathVariable UUID developerId) {
-        try {
-            jobService.removeCandidateFromJob(developerId, jobId);
-            return ResponseEntity.noContent().build(); // HTTP 204
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-    }
-
 }

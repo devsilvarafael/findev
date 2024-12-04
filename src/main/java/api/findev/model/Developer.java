@@ -59,4 +59,7 @@ public class Developer {
 
     @OneToMany(mappedBy = "developer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DeveloperSkill> skills = new ArrayList<>();
+
+    @OneToMany(mappedBy = "developer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<JobCandidature> candidatures = new ArrayList<>();
 }

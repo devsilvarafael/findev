@@ -1,12 +1,9 @@
 package api.findev.dto.response;
 
 import api.findev.dto.CompanyDto;
-import api.findev.dto.DeveloperDto;
 import api.findev.dto.RecruiterDto;
-import api.findev.dto.request.JobBenefitRequestDto;
 import api.findev.enums.ContractType;
 import api.findev.enums.WorkModality;
-import api.findev.model.JobRequirement;
 
 import java.util.Date;
 import java.util.List;
@@ -27,7 +24,7 @@ public record JobResponseDto(
         CompanyDto company,
         RecruiterDto recruiter,
         List<JobBenefitDto> benefits,
-        List<DeveloperDto> candidates,
+        List<CandidatureDto> candidatures,
         List<JobRequirementDto> requirements
 ) {
 }

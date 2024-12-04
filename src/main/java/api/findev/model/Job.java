@@ -1,7 +1,6 @@
 package api.findev.model;
 
 import api.findev.enums.ContractType;
-import api.findev.enums.JobStatus;
 import api.findev.enums.WorkModality;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -67,6 +66,6 @@ public class Job {
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JobRequirement> requirements = new ArrayList<>();
 
-    @OneToMany(mappedBy = "", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Developer> candidates = new ArrayList<>();
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<JobCandidature> candidates = new ArrayList<>();
 }

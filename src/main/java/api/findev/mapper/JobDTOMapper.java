@@ -3,10 +3,7 @@ package api.findev.mapper;
 import api.findev.dto.CompanyDto;
 import api.findev.dto.DeveloperDto;
 import api.findev.dto.RecruiterDto;
-import api.findev.dto.response.JobBenefitDto;
-import api.findev.dto.response.JobRequirementDto;
-import api.findev.dto.response.JobResponseDto;
-import api.findev.dto.response.SkillExperienceDto;
+import api.findev.dto.response.*;
 import api.findev.model.*;
 import api.findev.repository.CompanyRepository;
 import api.findev.repository.RecruiterRepository;
@@ -70,8 +67,8 @@ public class JobDTOMapper implements Function<Job, JobResponseDto> {
                         .map(this::mapToJobBenefitDto)
                         .collect(Collectors.toList()),
                 job.getCandidates().stream()
-                        .map(this::mapToDeveloperDto)
-                        .collect(Collectors.toList()),
+                        .map(this::mapToCandidatureDto)
+                        .collect(Collectors.toList()), // Updated mapping
                 job.getRequirements().stream()
                         .map(this::mapToRequirementDto)
                         .collect(Collectors.toList())
@@ -82,8 +79,10 @@ public class JobDTOMapper implements Function<Job, JobResponseDto> {
         return new JobBenefitDto(jobBenefit.getBenefit());
     }
 
-    private DeveloperDto mapToDeveloperDto(Developer developer) {
-        return new DeveloperDto(
+    private CandidatureDto mapToCandidatureDto(JobCandidature jobCandidate) {
+        Developer developer = jobCandidate.getDeveloper();
+
+        DeveloperDto developerDto = new DeveloperDto(
                 developer.getId(),
                 developer.getFirstName(),
                 developer.getLastName(),
@@ -94,7 +93,9 @@ public class JobDTOMapper implements Function<Job, JobResponseDto> {
                 developer.getSkills().stream()
                         .map(this::mapToSkillExperienceDto)
                         .collect(Collectors.toList())
-                );
+        );
+
+        return new CandidatureDto(jobCandidate.getId(), developerDto, jobCandidate.getStatus().toString());
     }
 
     private JobRequirementDto mapToRequirementDto(JobRequirement jobRequirement) {
@@ -107,15 +108,5 @@ public class JobDTOMapper implements Function<Job, JobResponseDto> {
                 developerSkill.getSkill().getName(),
                 developerSkill.getExperienceYears()
         );
-    }
-
-    @Override
-    public <V> Function<V, JobResponseDto> compose(Function<? super V, ? extends Job> before) {
-        return Function.super.compose(before);
-    }
-
-    @Override
-    public <V> Function<Job, V> andThen(Function<? super JobResponseDto, ? extends V> after) {
-        return Function.super.andThen(after);
     }
 }

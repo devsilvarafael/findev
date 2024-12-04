@@ -2,12 +2,10 @@ package api.findev.service.Impl;
 
 import api.findev.dto.request.JobRequestDto;
 import api.findev.dto.response.JobResponseDto;
+import api.findev.enums.CandidatureStatus;
 import api.findev.mapper.JobDTOMapper;
 import api.findev.model.*;
-import api.findev.repository.CompanyRepository;
-import api.findev.repository.DeveloperRepository;
-import api.findev.repository.JobRepository;
-import api.findev.repository.RecruiterRepository;
+import api.findev.repository.*;
 import api.findev.service.JobService;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -29,12 +27,16 @@ public class JobServiceImpl implements JobService {
     private final RecruiterRepository recruiterRepository;
     private final DeveloperRepository developerRepository;
     private final JobDTOMapper jobDTOMapper;
+    private final CandidatureRepository candidatureRepository;
 
-    public JobServiceImpl(JobRepository jobRepository, CompanyRepository companyRepository, RecruiterRepository recruiterRepository, DeveloperRepository developerRepository, JobDTOMapper jobDTOMapper) {
+    public JobServiceImpl(JobRepository jobRepository, CompanyRepository companyRepository,
+                          RecruiterRepository recruiterRepository, DeveloperRepository developerRepository,
+                          CandidatureRepository candidatureRepository, JobDTOMapper jobDTOMapper) {
         this.jobRepository = jobRepository;
         this.companyRepository = companyRepository;
         this.recruiterRepository = recruiterRepository;
         this.developerRepository = developerRepository;
+        this.candidatureRepository = candidatureRepository;
         this.jobDTOMapper = jobDTOMapper;
     }
 
@@ -193,28 +195,63 @@ public class JobServiceImpl implements JobService {
         return jobDTOMapper.apply(updatedJob);
     }
 
-
     @Override
-    public JobResponseDto addCandidateToJob(UUID developerId, UUID jobId) throws Exception {
-        Optional<Job> existingJobOpt = jobRepository.findById(jobId);
-        Optional<Developer> existingCandidateOpt = developerRepository.findByIdWithSkills(developerId);
+    public void applyToJob(UUID developerId, UUID jobId) throws Exception {
+        Optional<Job> jobOpt = jobRepository.findById(jobId);
+        Optional<Developer> developerOpt = developerRepository.findById(developerId);
 
-        if (existingJobOpt.isEmpty()) {
+        if (jobOpt.isEmpty()) {
             throw new Exception("Job not found.");
         }
 
-        if (existingCandidateOpt.isEmpty()) {
-            throw new Exception("Candidate not found.");
+        if (developerOpt.isEmpty()) {
+            throw new Exception("Developer not found.");
         }
 
-        Job job = existingJobOpt.get();
-        Developer developer = existingCandidateOpt.get();
+        Job job = jobOpt.get();
+        Developer developer = developerOpt.get();
 
-        job.getCandidates().add(developer);
-        Job updatedJob = jobRepository.save(job);
+        boolean alreadyApplied = candidatureRepository.existsByJobAndDeveloper(job, developer);
+        if (alreadyApplied) {
+            throw new Exception("Developer has already applied for this job.");
+        }
 
-        return jobDTOMapper.apply(updatedJob);
+        // Create a new candidature
+        JobCandidature candidature = new JobCandidature();
+        candidature.setJob(job);
+        candidature.setDeveloper(developer);
+        candidature.setStatus(CandidatureStatus.PENDING_REVIEW);
+
+        candidatureRepository.save(candidature);
     }
+
+
+    @Override
+    public void unapplyFromJob(UUID developerId, UUID jobId) throws Exception {
+        Optional<Job> jobOpt = jobRepository.findById(jobId);
+        Optional<Developer> developerOpt = developerRepository.findById(developerId);
+
+        if (jobOpt.isEmpty()) {
+            throw new Exception("Job not found.");
+        }
+
+        if (developerOpt.isEmpty()) {
+            throw new Exception("Developer not found.");
+        }
+
+        Job job = jobOpt.get();
+        Developer developer = developerOpt.get();
+
+        // Find the candidature
+        Optional<JobCandidature> candidatureOpt = candidatureRepository.findByJobAndDeveloper(job, developer);
+        if (candidatureOpt.isEmpty()) {
+            throw new Exception("Candidature not found.");
+        }
+
+        // Delete the candidature
+        candidatureRepository.delete(candidatureOpt.get());
+    }
+
 
     @Override
     public Page<JobResponseDto> getMatchingJobsForDeveloper(UUID developerId, Pageable pageable) throws Exception {
@@ -237,27 +274,5 @@ public class JobServiceImpl implements JobService {
                 .collect(Collectors.toList());
 
         return new PageImpl<>(matchingJobs, pageable, matchingJobs.size());
-    }
-
-    @Override
-    public void removeCandidateFromJob(UUID developerId, UUID jobId) throws Exception {
-        Optional<Job> jobOpt = jobRepository.findById(jobId);
-        if (jobOpt.isEmpty()) {
-            throw new Exception("Job not found.");
-        }
-        Job job = jobOpt.get();
-
-        Optional<Developer> developerOpt = developerRepository.findById(developerId);
-        if (developerOpt.isEmpty()) {
-            throw new Exception("Developer not found.");
-        }
-        Developer developer = developerOpt.get();
-
-        boolean removed = job.getCandidates().remove(developer);
-        if (!removed) {
-            throw new Exception("Developer is not a candidate for this job.");
-        }
-
-        jobRepository.save(job);
     }
 }
