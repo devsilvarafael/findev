@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -28,12 +29,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginRequest body){
-        System.out.println("estou aqui");
         User user = userService.findByEmail(body.getEmail());
-        System.out.println(user.getEmail());
-        System.out.println(passwordEncoder.encode(body.getPassword()));
-        System.out.println(user.getPassword());
-        if(passwordEncoder.matches(body.getPassword(), user.getPassword())) {
+        if(Objects.equals(body.getPassword(), user.getPassword())) {
             String token = this.tokenService.generateToken(user);
             System.out.println("Token: " + token);
             return ResponseEntity.ok(new AuthResponseDto(user.getEmail(), token));

@@ -125,7 +125,7 @@ public class DeveloperServiceImpl implements DeveloperService {
 
         User user = new User();
         user.setEmail(developer.getEmail());
-        user.setPassword(passwordEncoder.encode(developer.getPassword()));
+        user.setPassword(developer.getPassword());
         user.setRole(UserType.DEVELOPER);
         User savedUser = userService.save(user);
 

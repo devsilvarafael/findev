@@ -42,6 +42,7 @@ public class DeveloperController {
 
     @PostMapping
     public ResponseEntity<DeveloperDto> saveNewDeveloper(@RequestBody @Valid DeveloperWithSkillsDto developerWithSkillsDto) {
+        System.out.println("eahsudsakjdsaljdlkasj");
         Developer developer = new Developer();
         developer.setFirstName(developerWithSkillsDto.getFirstName());
         developer.setLastName(developerWithSkillsDto.getLastName());
