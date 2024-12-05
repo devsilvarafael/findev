@@ -9,6 +9,7 @@ public record RecruiterDto(
     String firstName,
     String lastName,
     String email,
+    String avatar,
     String phone,
     UUID companyId
 ){

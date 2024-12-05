@@ -35,6 +35,9 @@ public class Developer {
     @NotNull
     private String lastName;
 
+    @Column(name = "avatar")
+    private String avatar;
+
     @Column(name = "email", nullable = false)
     @NotNull
     private String email;

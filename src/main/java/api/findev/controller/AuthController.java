@@ -49,10 +49,10 @@ public class AuthController {
             }
 
             if (developer.isPresent() && recruiter.isEmpty()) {
-                return ResponseEntity.ok(new AuthResponseDto(user.getEmail(), token, developer.get().getId()));
+                return ResponseEntity.ok(new AuthResponseDto(user.getEmail(), token, developer.get().getId(), UserType.DEVELOPER, developer.get().getAvatar()));
             }
 
-           return ResponseEntity.ok(new AuthResponseDto(user.getEmail(), token, recruiter.get().recruiterId()));
+           return ResponseEntity.ok(new AuthResponseDto(user.getEmail(), token, recruiter.get().recruiterId(), UserType.RECRUITER, recruiter.get().avatar()));
         }
         return ResponseEntity.badRequest().build();
     }

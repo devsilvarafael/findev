@@ -32,6 +32,9 @@ public class Recruiter {
     @Column(name = "last_name")
     private String lastName;
 
+    @Column(name = "avatar")
+    private String avatar;
+
     @Column(name = "email")
     private String email;
 

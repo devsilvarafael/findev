@@ -36,6 +36,7 @@ public class JobDTOMapper implements Function<Job, JobResponseDto> {
                         company.getAddress(),
                         company.getWebsite(),
                         company.getEmail(),
+                        company.getCompanyLogo(),
                         company.getIsActive(),
                         null
                 ))
@@ -47,6 +48,7 @@ public class JobDTOMapper implements Function<Job, JobResponseDto> {
                         recruiter.getFirstName(),
                         recruiter.getLastName(),
                         recruiter.getEmail(),
+                        recruiter.getAvatar(),
                         recruiter.getPhone(),
                         recruiter.getCompany().getId()
                 ))

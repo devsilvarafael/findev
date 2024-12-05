@@ -10,6 +10,7 @@ public record CompanyDto(
         String address,
         String website,
         String email,
+        String companyLogo,
         boolean isActive,
         List<RecruiterDto> recruiters
 ) {

@@ -20,4 +20,5 @@ public interface RecruiterService {
     RecruiterDto updateRecruiter(UUID id, Recruiter recruiterDto);
 
     RecruiterDto createRecruiter(RecruiterCreateDto recruiterDto);
+    RecruiterDto getRecruiterById(UUID id);
 }

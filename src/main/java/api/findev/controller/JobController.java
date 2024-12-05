@@ -54,7 +54,6 @@ public class JobController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdJob);
     }
 
-    // New endpoint to apply to a job
     @PostMapping("/{jobId}/apply")
     public ResponseEntity<String> applyToJob(@PathVariable UUID jobId, @RequestBody ApplyJobRequest applyJobRequest) {
         try {

@@ -34,6 +34,7 @@ public class CompanyDTOMapper implements Function<Company, CompanyDto> {
                 company.getAddress(),
                 company.getWebsite(),
                 company.getEmail(),
+                company.getCompanyLogo(),
                 company.getIsActive(),
                 recruiters
         );

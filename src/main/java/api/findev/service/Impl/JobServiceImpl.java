@@ -216,7 +216,6 @@ public class JobServiceImpl implements JobService {
             throw new Exception("Developer has already applied for this job.");
         }
 
-        // Create a new candidature
         JobCandidature candidature = new JobCandidature();
         candidature.setJob(job);
         candidature.setDeveloper(developer);
@@ -242,13 +241,11 @@ public class JobServiceImpl implements JobService {
         Job job = jobOpt.get();
         Developer developer = developerOpt.get();
 
-        // Find the candidature
         Optional<JobCandidature> candidatureOpt = candidatureRepository.findByJobAndDeveloper(job, developer);
         if (candidatureOpt.isEmpty()) {
             throw new Exception("Candidature not found.");
         }
 
-        // Delete the candidature
         candidatureRepository.delete(candidatureOpt.get());
     }
 

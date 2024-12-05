@@ -39,6 +39,9 @@ public class Company {
     @Column(name = "registration_number", nullable = false)
     private String registrationNumber;
 
+    @Column(name = "company_logo", nullable = false)
+    private String companyLogo;
+
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
 

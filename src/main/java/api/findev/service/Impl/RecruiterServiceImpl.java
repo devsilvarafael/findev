@@ -131,4 +131,13 @@ public class RecruiterServiceImpl implements RecruiterService {
         return recruiterDTOMapper.apply(savedRecruiter);
     }
 
+    @Override
+    public RecruiterDto getRecruiterById(UUID id) throws RecruiterNotFoundException {
+       Recruiter recruiter = recruiterRepository.findById(id)
+                .orElseThrow(() -> new RecruiterNotFoundException("Recruiter not found"));
+
+
+        return recruiterRepository.findRecruitersByRecruiterId(id);
+    }
+
 }

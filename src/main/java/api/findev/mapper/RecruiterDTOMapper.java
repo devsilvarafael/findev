@@ -28,6 +28,7 @@ public class RecruiterDTOMapper implements Function<Recruiter, RecruiterDto> {
                     recruiter.getFirstName(),
                     recruiter.getLastName(),
                     recruiter.getEmail(),
+                    recruiter.getAvatar(),
                     recruiter.getPhone(),
                     recruiter.getCompany().getId()
             );
@@ -38,6 +39,7 @@ public class RecruiterDTOMapper implements Function<Recruiter, RecruiterDto> {
                     recruiter.getFirstName(),
                     recruiter.getLastName(),
                     recruiter.getEmail(),
+                    recruiter.getAvatar(),
                     recruiter.getPhone(),
                     null
             );

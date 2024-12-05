@@ -12,6 +12,7 @@ public record DeveloperDto (
         String firstName,
         String lastName,
         String email,
+        String avatar,
         String phone,
         String portfolio,
         int seniority,

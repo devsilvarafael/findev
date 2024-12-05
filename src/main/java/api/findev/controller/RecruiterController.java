@@ -44,6 +44,11 @@ public class RecruiterController {
         return ResponseEntity.status(HttpStatus.CREATED).body(recruiterService.createRecruiter(recruiter));
     }
 
+    @GetMapping("/{recruiterId}")
+    public ResponseEntity<RecruiterDto> getRecruiterById(@PathVariable UUID recruiterId) {
+        return ResponseEntity.status(HttpStatus.OK).body(recruiterService.getRecruiterById(recruiterId));
+    }
+
     @PutMapping("/{recruiterId}")
     public ResponseEntity<RecruiterDto> updateRecruiter(@PathVariable UUID recruiterId, @RequestBody @Valid Recruiter recruiter) {
         return ResponseEntity.status(HttpStatus.OK).body(recruiterService.updateRecruiter(recruiterId, recruiter));

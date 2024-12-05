@@ -22,6 +22,7 @@ public class DeveloperDTOMapper implements Function<Developer, DeveloperDto> {
                 developer.getFirstName(),
                 developer.getLastName(),
                 developer.getEmail(),
+                developer.getAvatar(),
                 developer.getPhone(),
                 developer.getPortfolio(),
                 developer.getSeniority(),
