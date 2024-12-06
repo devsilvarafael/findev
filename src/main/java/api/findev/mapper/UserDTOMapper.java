@@ -16,6 +16,7 @@ public class UserDTOMapper implements Function<User, UserDto> {
         userDto.setEmail(user.getEmail());
         userDto.setRole(user.getRole().toString());
         userDto.setAvatar(user.getAvatar());
+        userDto.setActive(user.isActive());
 
         return userDto;
     }

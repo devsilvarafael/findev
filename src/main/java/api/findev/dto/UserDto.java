@@ -10,5 +10,6 @@ public class UserDto {
     private String avatar;
     private String firstName;
     private String lastName;
+    private boolean isActive;
 }
 

@@ -21,7 +21,7 @@ public class Recruiter {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID recruiterId;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @MapsId
     private User user;
 

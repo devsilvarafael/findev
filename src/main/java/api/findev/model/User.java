@@ -30,4 +30,7 @@ public class User {
 
     @Column(name = "role")
     private UserType role;
+
+    @Column(name = "is_active")
+    private boolean isActive;
 }
