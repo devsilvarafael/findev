@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
@@ -44,10 +45,12 @@ public class AuthController {
             }
 
             if (!user.isActive()) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não está ativo. Contate o administrador de sua empresa.");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não  está ativo. Contate o administrador de sua empresa.");
             }
 
-            if (!passwordEncoder.matches(body.getPassword(), user.getPassword())) {
+            if (!Objects.equals(body.getPassword(), user.getPassword())) {
+                System.out.println(body.getPassword());
+                System.out.println(user.getPassword());
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Senha incorreta.");
             }
 
