@@ -36,6 +36,12 @@ public class CompanyAdminController {
         return ResponseEntity.status(HttpStatus.OK).body(companyAdminService.getJobsByCompany(companyId, pageable));
     }
 
+    @GetMapping("/{adminId}")
+    public ResponseEntity<CompanyAdmin> getCompanyAdmin(@PathVariable UUID adminId) throws Exception {
+        return ResponseEntity.status(HttpStatus.OK).body(companyAdminService.getCompanyAdmin(adminId));
+    }
+
+
     @PostMapping("")
     public ResponseEntity<CompanyAdmin> createCompanyAdmin(@RequestBody @Valid  CompanyAdminRequestDto companyAdminRequestDto) {
         System.out.println(companyAdminRequestDto.email() + companyAdminRequestDto.password() + companyAdminRequestDto.companyId());

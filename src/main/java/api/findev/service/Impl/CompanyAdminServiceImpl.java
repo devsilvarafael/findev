@@ -49,6 +49,11 @@ public class CompanyAdminServiceImpl implements CompanyAdminService {
     }
 
     @Override
+    public CompanyAdmin getCompanyAdmin(UUID companyId) throws Exception {
+        return companyAdminRepository.findByCompanyAdminId(companyId).orElseThrow(() -> new RuntimeException("Company admin not found"));
+    }
+
+    @Override
     public CompanyAdmin createCompanyAdmin(CompanyAdminRequestDto companyAdminRequestDto) {
         Optional<CompanyAdmin> existsCompanyAdmin = companyAdminRepository.findByEmail(companyAdminRequestDto.email());
         if (existsCompanyAdmin.isPresent()) {

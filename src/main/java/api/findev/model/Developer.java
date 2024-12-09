@@ -18,14 +18,12 @@ import java.util.UUID;
 public class Developer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @MapsId
+    @JoinColumn(name = "user_id")
     private User user;
-
-
 
     @Column(name = "first_name", nullable = false)
     @NotNull

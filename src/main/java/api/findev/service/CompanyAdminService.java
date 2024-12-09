@@ -14,5 +14,6 @@ public interface CompanyAdminService {
 
     Page<RecruiterDto> getRecruitersByCompany(UUID companyId, Pageable pageable);
     Page<JobResponseDto> getJobsByCompany(UUID companyId, Pageable pageable) throws Exception;
+    CompanyAdmin getCompanyAdmin(UUID companyId) throws Exception;
     CompanyAdmin createCompanyAdmin(CompanyAdminRequestDto companyAdmin);
 }

@@ -21,10 +21,10 @@ public class Recruiter {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID recruiterId;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @MapsId
+    @JoinColumn(name = "user_id")
     private User user;
-
 
     @Column(name = "first_name")
     private String firstName;
@@ -44,7 +44,7 @@ public class Recruiter {
     @Column(name = "password")
     private String password;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 }
