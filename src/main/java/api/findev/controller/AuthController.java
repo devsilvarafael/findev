@@ -87,9 +87,14 @@ public class AuthController {
     public ResponseEntity<?> updateUserStatus(@PathVariable UUID id, @RequestParam boolean status) {
         try {
             User user = userService.findById(id);
+            Recruiter recruiter = recruiterRepository.findRecruiterByRecruiterId(id);
 
-            user.setActive(true);
+
+
+            user.setActive(status);
+            recruiter.setIsActive(status);
             userService.save(user);
+            recruiterRepository.save(recruiter);
 
             return ResponseEntity.ok("User status updated successfully.");
         } catch (RuntimeException e) {
