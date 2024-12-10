@@ -30,7 +30,8 @@ public class RecruiterDTOMapper implements Function<Recruiter, RecruiterDto> {
                     recruiter.getEmail(),
                     recruiter.getAvatar(),
                     recruiter.getPhone(),
-                    recruiter.getCompany().getId()
+                    recruiter.getCompany().getId(),
+                    recruiter.getIsActive()
             );
         } else {
 
@@ -41,7 +42,8 @@ public class RecruiterDTOMapper implements Function<Recruiter, RecruiterDto> {
                     recruiter.getEmail(),
                     recruiter.getAvatar(),
                     recruiter.getPhone(),
-                    null
+                    null,
+                    recruiter.getIsActive()
             );
         }
     }

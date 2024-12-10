@@ -11,7 +11,8 @@ public record RecruiterDto(
     String email,
     String avatar,
     String phone,
-    UUID companyId
+    UUID companyId,
+    boolean isActive
 ){
 
 }

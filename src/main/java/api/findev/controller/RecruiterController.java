@@ -4,6 +4,7 @@ import api.findev.dto.RecruiterCreateDto;
 import api.findev.dto.RecruiterDto;
 import api.findev.model.Company;
 import api.findev.model.Recruiter;
+import api.findev.repository.RecruiterRepository;
 import api.findev.service.RecruiterService;
 import jakarta.validation.Valid;
 import org.apache.coyote.Response;
@@ -22,9 +23,11 @@ import java.util.UUID;
 public class RecruiterController {
 
     private final RecruiterService recruiterService;
+    private final RecruiterRepository recruiterRepository;
 
-    public RecruiterController(RecruiterService recruiterService) {
+    public RecruiterController(RecruiterService recruiterService, RecruiterRepository recruiterRepository) {
         this.recruiterService = recruiterService;
+        this.recruiterRepository = recruiterRepository;
     }
 
     @GetMapping
@@ -50,8 +53,15 @@ public class RecruiterController {
     }
 
     @PutMapping("/{recruiterId}")
-    public ResponseEntity<RecruiterDto> updateRecruiter(@PathVariable UUID recruiterId, @RequestBody @Valid Recruiter recruiter) {
-        return ResponseEntity.status(HttpStatus.OK).body(recruiterService.updateRecruiter(recruiterId, recruiter));
+    public ResponseEntity<RecruiterDto> updateRecruiter(@PathVariable UUID recruiterId, @RequestBody @Valid RecruiterDto recruiter) {
+        Recruiter recruiterExists = recruiterRepository.findRecruiterByRecruiterId(recruiterId);
+
+        recruiterExists.setPhone(recruiter.phone());
+        recruiterExists.setEmail(recruiter.email());
+        recruiterExists.setFirstName(recruiter.firstName());
+        recruiterExists.setLastName(recruiter.lastName());
+
+        return ResponseEntity.status(HttpStatus.OK).body(recruiterService.updateRecruiter(recruiterId, recruiterExists));
     }
 
     @DeleteMapping("/{recruiterId}")

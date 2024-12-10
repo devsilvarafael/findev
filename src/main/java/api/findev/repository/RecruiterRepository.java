@@ -16,4 +16,5 @@ public interface RecruiterRepository extends JpaRepository<Recruiter, UUID> {
     Page<RecruiterDto> findRecruitersByCompanyId(UUID companyId, Pageable pageable);
     Optional<RecruiterDto> findRecruiterByEmail(String email);
     RecruiterDto findRecruitersByRecruiterId(UUID recruiterId);
+    Recruiter findRecruiterByRecruiterId(UUID recruiterId);
 }

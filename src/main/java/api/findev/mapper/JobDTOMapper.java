@@ -50,7 +50,8 @@ public class JobDTOMapper implements Function<Job, JobResponseDto> {
                         recruiter.getEmail(),
                         recruiter.getAvatar(),
                         recruiter.getPhone(),
-                        recruiter.getCompany().getId()
+                        recruiter.getCompany().getId(),
+                        recruiter.getIsActive()
                 ))
                 .orElseThrow(() -> new IllegalStateException("Recruiter not found for Job ID: " + job.getId()));
 

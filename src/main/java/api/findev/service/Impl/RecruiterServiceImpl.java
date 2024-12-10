@@ -71,8 +71,11 @@ public class RecruiterServiceImpl implements RecruiterService {
 
     @Override
     public RecruiterDto updateRecruiter(UUID id, Recruiter recruiterDto) {
+
         Recruiter existingRecruiter = recruiterRepository.findById(id)
                 .orElseThrow(() -> new RecruiterNotFoundException("Recruiter not found"));
+
+        User existingUser = existingRecruiter.getUser();
 
         if (recruiterDto.getFirstName() != null) {
             existingRecruiter.setFirstName(recruiterDto.getFirstName());
@@ -84,21 +87,29 @@ public class RecruiterServiceImpl implements RecruiterService {
 
         if (recruiterDto.getEmail() != null) {
             existingRecruiter.setEmail(recruiterDto.getEmail());
+            existingUser.setEmail(recruiterDto.getEmail());
         }
+
         if (recruiterDto.getPassword() != null) {
-            existingRecruiter.setPassword(recruiterDto.getPassword());
+            String encodedPassword = recruiterDto.getPassword();
+            existingRecruiter.setPassword(encodedPassword);
+            existingUser.setPassword(encodedPassword);
         }
+
         if (recruiterDto.getPhone() != null) {
             existingRecruiter.setPhone(recruiterDto.getPhone());
         }
+
         if (recruiterDto.getCompany() != null) {
             existingRecruiter.setCompany(recruiterDto.getCompany());
         }
 
-        Recruiter updatedRecruiter = recruiterRepository.save(existingRecruiter);
+        recruiterRepository.save(existingRecruiter);
+        userService.save(existingUser);
 
-        return recruiterDTOMapper.apply(updatedRecruiter);
+        return recruiterDTOMapper.apply(existingRecruiter);
     }
+
 
     public RecruiterDto createRecruiter(RecruiterCreateDto recruiterCreateDTO) {
         Company company = companyRepository.findById(recruiterCreateDTO.getCompany())
