@@ -18,7 +18,7 @@ public interface DeveloperService {
 
     void deleteById(UUID id) throws DeveloperNotFoundException;
 
-    DeveloperDto updateDeveloper(UUID id, Developer developer);
+    DeveloperDto updateDeveloper(UUID developerId, Developer developer, List<SkillExperienceDto> updatedSkills);
 
     @Query("SELECT d FROM Developer d LEFT JOIN FETCH d.skills ds LEFT JOIN FETCH ds.skill WHERE d.id = :developerId")
     Optional<Developer> findByIdWithSkills(UUID developerId);

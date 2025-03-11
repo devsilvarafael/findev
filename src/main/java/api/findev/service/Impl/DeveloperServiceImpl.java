@@ -78,35 +78,40 @@ public class DeveloperServiceImpl implements DeveloperService {
     }
 
     @Override
-    public DeveloperDto updateDeveloper(UUID id, Developer developerDto) {
-        Developer existingDeveloper = developerRepository.findById(id)
-                .orElseThrow(() -> new DeveloperNotFoundException("Developer not found"));
+    public DeveloperDto updateDeveloper(UUID developerId, Developer developer, List<SkillExperienceDto> updatedSkills) {
+        Developer existingDeveloper = developerRepository.findById(developerId)
+                .orElseThrow(() -> new IllegalArgumentException("Developer not found with id: " + developerId));
 
-        if (developerDto.getFirstName() != null) {
-            existingDeveloper.setFirstName(developerDto.getFirstName());
-        }
-        if (developerDto.getLastName() != null) {
-            existingDeveloper.setLastName(developerDto.getLastName());
-        }
-        if (developerDto.getEmail() != null) {
-            existingDeveloper.setEmail(developerDto.getEmail());
-        }
-        if (developerDto.getPhone() != null) {
-            existingDeveloper.setPhone(developerDto.getPhone());
-        }
-        if (developerDto.getPassword() != null) {
-            existingDeveloper.setPassword(developerDto.getPassword());
-        }
-        if (developerDto.getPortfolio() != null) {
-            existingDeveloper.setPortfolio(developerDto.getPortfolio());
-        }
+        // Update basic developer fields
+        existingDeveloper.setFirstName(developer.getFirstName());
+        existingDeveloper.setLastName(developer.getLastName());
+        existingDeveloper.setEmail(developer.getEmail());
+        existingDeveloper.setPhone(developer.getPhone());
+        existingDeveloper.setPassword(developer.getPassword());
+        existingDeveloper.setPortfolio(developer.getPortfolio());
+        existingDeveloper.setSeniority(developer.getSeniority());
+        existingDeveloper.setStatus(developer.isStatus());
 
-        existingDeveloper.setSeniority(developerDto.getSeniority());
-        existingDeveloper.setStatus(developerDto.isStatus());
+        updateDeveloperSkills(existingDeveloper, updatedSkills);
 
         Developer updatedDeveloper = developerRepository.save(existingDeveloper);
-
         return developerDTOMapper.apply(updatedDeveloper);
+    }
+
+    private void updateDeveloperSkills(Developer developer, List<SkillExperienceDto> updatedSkills) {
+        developer.getSkills().clear();
+
+        for (SkillExperienceDto skillDto : updatedSkills) {
+            Skill skill = skillRepository.findById(skillDto.getSkillId())
+                    .orElseThrow(() -> new IllegalArgumentException("Skill not found"));
+
+            DeveloperSkill developerSkill = new DeveloperSkill();
+            developerSkill.setDeveloper(developer);
+            developerSkill.setSkill(skill);
+            developerSkill.setExperienceYears(skillDto.getExperienceYears());
+
+            developer.getSkills().add(developerSkill);
+        }
     }
 
     @Override
