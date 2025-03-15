@@ -64,26 +64,7 @@ public class DeveloperController {
     }
 
     @PutMapping("/{developerId}")
-    public ResponseEntity<DeveloperDto> updateDeveloper(
-            @PathVariable UUID developerId,
-            @RequestBody @Valid DeveloperWithSkillsDto developerWithSkillsDto) {
-
-        Developer developer = new Developer();
-        developer.setFirstName(developerWithSkillsDto.getFirstName());
-        developer.setLastName(developerWithSkillsDto.getLastName());
-        developer.setEmail(developerWithSkillsDto.getEmail());
-        developer.setPhone(developerWithSkillsDto.getPhone());
-        developer.setPassword(developerWithSkillsDto.getPassword());
-        developer.setPortfolio(developerWithSkillsDto.getPortfolio());
-        developer.setSeniority(developerWithSkillsDto.getSeniority());
-        developer.setStatus(developerWithSkillsDto.isStatus());
-
-        DeveloperDto updatedDeveloperDto = developerService.updateDeveloper(
-                developerId,
-                developer,
-                developerWithSkillsDto.getSkills()
-        );
-
-        return ResponseEntity.status(HttpStatus.OK).body(updatedDeveloperDto);
+    public ResponseEntity<DeveloperDto> updateDeveloper(@PathVariable UUID developerId, @RequestBody @Valid Developer developer) {
+        return ResponseEntity.status(HttpStatus.OK).body(developerService.updateDeveloper(developerId, developer));
     }
 }
