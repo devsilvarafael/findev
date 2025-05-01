@@ -58,7 +58,7 @@ public class Developer {
     @Column(name = "status", nullable = false)
     private boolean status = true;
 
-    @OneToMany(mappedBy = "developer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "developer", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<DeveloperSkill> skills = new ArrayList<>();
 
     @OneToMany(mappedBy = "developer", cascade = CascadeType.ALL, orphanRemoval = true)

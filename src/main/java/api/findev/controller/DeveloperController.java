@@ -64,7 +64,9 @@ public class DeveloperController {
     }
 
     @PutMapping("/{developerId}")
-    public ResponseEntity<DeveloperDto> updateDeveloper(@PathVariable UUID developerId, @RequestBody @Valid Developer developer) {
-        return ResponseEntity.status(HttpStatus.OK).body(developerService.updateDeveloper(developerId, developer));
+    public ResponseEntity<DeveloperDto> updateDeveloper(
+            @PathVariable UUID developerId,
+            @RequestBody @Valid DeveloperWithSkillsDto developerDto) {
+        return ResponseEntity.ok(developerService.updateDeveloper(developerId, developerDto));
     }
 }

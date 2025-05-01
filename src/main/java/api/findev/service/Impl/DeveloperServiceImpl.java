@@ -1,6 +1,7 @@
 package api.findev.service.Impl;
 
 import api.findev.dto.DeveloperDto;
+import api.findev.dto.request.DeveloperWithSkillsDto;
 import api.findev.dto.response.SkillExperienceDto;
 import api.findev.enums.UserType;
 import api.findev.exceptions.DeveloperNotFoundException;
@@ -21,8 +22,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -78,36 +81,64 @@ public class DeveloperServiceImpl implements DeveloperService {
     }
 
     @Override
-    public DeveloperDto updateDeveloper(UUID id, Developer developerDto) {
+    public DeveloperDto updateDeveloper(UUID id, DeveloperWithSkillsDto developerDto) {
         Developer existingDeveloper = developerRepository.findById(id)
                 .orElseThrow(() -> new DeveloperNotFoundException("Developer not found"));
 
-        if (developerDto.getFirstName() != null) {
-            existingDeveloper.setFirstName(developerDto.getFirstName());
-        }
-        if (developerDto.getLastName() != null) {
-            existingDeveloper.setLastName(developerDto.getLastName());
-        }
-        if (developerDto.getEmail() != null) {
-            existingDeveloper.setEmail(developerDto.getEmail());
-        }
-        if (developerDto.getPhone() != null) {
-            existingDeveloper.setPhone(developerDto.getPhone());
-        }
-        if (developerDto.getPassword() != null) {
-            existingDeveloper.setPassword(developerDto.getPassword());
-        }
-        if (developerDto.getPortfolio() != null) {
-            existingDeveloper.setPortfolio(developerDto.getPortfolio());
-        }
-
+        // Update basic fields
+        existingDeveloper.setFirstName(developerDto.getFirstName());
+        existingDeveloper.setLastName(developerDto.getLastName());
+        existingDeveloper.setEmail(developerDto.getEmail());
+        existingDeveloper.setPhone(developerDto.getPhone());
+        existingDeveloper.setPassword(developerDto.getPassword());
+        existingDeveloper.setPortfolio(developerDto.getPortfolio());
         existingDeveloper.setSeniority(developerDto.getSeniority());
         existingDeveloper.setStatus(developerDto.isStatus());
 
-        Developer updatedDeveloper = developerRepository.save(existingDeveloper);
+        // Handle skills update more carefully
+        if (developerDto.getSkills() != null && !developerDto.getSkills().isEmpty()) {
+            updateDeveloperSkills(existingDeveloper, developerDto.getSkills());
+        } else {
+            // If skills array is empty, clear existing skills
+            existingDeveloper.getSkills().clear();
+        }
 
+        Developer updatedDeveloper = developerRepository.save(existingDeveloper);
         return developerDTOMapper.apply(updatedDeveloper);
     }
+
+    private void updateDeveloperSkills(Developer developer, List<SkillExperienceDto> skillsDto) {
+        // Create a map of existing skills for quick lookup
+        Map<Long, DeveloperSkill> existingSkillsMap = developer.getSkills().stream()
+                .collect(Collectors.toMap(
+                        ds -> ds.getSkill().getId(),
+                        Function.identity()
+                ));
+
+        // Clear the collection first to avoid duplicates
+        developer.getSkills().clear();
+
+        // Process each skill from DTO
+        for (SkillExperienceDto skillDto : skillsDto) {
+            Skill skill = skillRepository.findById(skillDto.getSkillId())
+                    .orElseThrow(() -> new RuntimeException("Skill not found with id: " + skillDto.getSkillId()));
+
+            // Check if this skill already existed for the developer
+            DeveloperSkill developerSkill = existingSkillsMap.get(skillDto.getSkillId());
+
+            if (developerSkill == null) {
+                // Create new DeveloperSkill if it didn't exist before
+                developerSkill = new DeveloperSkill();
+                developerSkill.setDeveloper(developer);
+                developerSkill.setSkill(skill);
+            }
+
+            // Update experience years (whether new or existing)
+            developerSkill.setExperienceYears(skillDto.getExperienceYears());
+            developer.getSkills().add(developerSkill);
+        }
+    }
+
 
     @Override
     public Optional<Developer> findByIdWithSkills(UUID developerId) {

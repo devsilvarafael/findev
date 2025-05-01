@@ -1,6 +1,7 @@
 package api.findev.service;
 
 import api.findev.dto.DeveloperDto;
+import api.findev.dto.request.DeveloperWithSkillsDto;
 import api.findev.dto.response.SkillExperienceDto;
 import api.findev.exceptions.DeveloperNotFoundException;
 import api.findev.model.Developer;
@@ -18,7 +19,7 @@ public interface DeveloperService {
 
     void deleteById(UUID id) throws DeveloperNotFoundException;
 
-    DeveloperDto updateDeveloper(UUID id, Developer developer);
+    DeveloperDto updateDeveloper(UUID id, DeveloperWithSkillsDto developer);
 
     @Query("SELECT d FROM Developer d LEFT JOIN FETCH d.skills ds LEFT JOIN FETCH ds.skill WHERE d.id = :developerId")
     Optional<Developer> findByIdWithSkills(UUID developerId);
