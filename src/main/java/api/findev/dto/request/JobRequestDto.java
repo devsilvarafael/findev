@@ -2,6 +2,7 @@ package api.findev.dto.request;
 
 import api.findev.dto.response.JobRequirementDto;
 import api.findev.enums.ContractType;
+import api.findev.enums.JobPriority;
 import api.findev.enums.WorkModality;
 
 import java.util.Date;
@@ -20,6 +21,7 @@ public record JobRequestDto(
         int minWeekHours,
         int maxWeekHours,
         WorkModality workModality,
+        JobPriority priority,
         String workLocation,
         List<JobBenefitRequestDto> benefits,
         List<JobRequirementDto> requirements,

@@ -1,6 +1,7 @@
 package api.findev.model;
 
 import api.findev.enums.ContractType;
+import api.findev.enums.JobPriority;
 import api.findev.enums.WorkModality;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -38,6 +39,9 @@ public class Job {
     @Column(name = "expiration_date", nullable = false)
     private Date expirationDate;
 
+    @Column(name = "created_at" , nullable = false)
+    private Date createdAt;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
 
@@ -59,6 +63,9 @@ public class Job {
 
     @Column(name = "workLocation", nullable = false)
     private String workLocation;
+
+    @Column(name = "priority", nullable = false)
+    private JobPriority priority;
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JobBenefit> benefits = new ArrayList<>();

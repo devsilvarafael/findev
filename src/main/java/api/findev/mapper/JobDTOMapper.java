@@ -62,6 +62,7 @@ public class JobDTOMapper implements Function<Job, JobResponseDto> {
                 job.getStatus(),
                 job.getSalary(),
                 job.getExpirationDate(),
+                job.getCreatedAt(),
                 job.getContractType(),
                 job.getMinWeekHours(),
                 job.getMaxWeekHours(),
@@ -69,6 +70,7 @@ public class JobDTOMapper implements Function<Job, JobResponseDto> {
                 job.getWorkLocation(),
                 companyDto,
                 recruiterDto,
+                job.getPriority(),
                 job.getBenefits().stream()
                         .map(this::mapToJobBenefitDto)
                         .collect(Collectors.toList()),

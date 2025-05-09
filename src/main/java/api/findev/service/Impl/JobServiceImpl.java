@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -91,11 +92,13 @@ public class JobServiceImpl implements JobService {
         job.setExpirationDate(jobRequestDto.expirationDate());
         job.setCompany(companyOpt.get());
         job.setRecruiter(recruiterOpt.get());
+        job.setCreatedAt(new Date());
         job.setContractType(jobRequestDto.contractType());
         job.setMinWeekHours(jobRequestDto.minWeekHours());
         job.setMaxWeekHours(jobRequestDto.maxWeekHours());
         job.setWorkModality(jobRequestDto.workModality());
         job.setWorkLocation(jobRequestDto.workLocation());
+        job.setPriority(jobRequestDto.priority());
 
         if (jobRequestDto.benefits() != null) {
             jobRequestDto.benefits().forEach(benefitDto -> {
@@ -152,6 +155,7 @@ public class JobServiceImpl implements JobService {
         existingJob.setStatus(jobRequestDto.status());
         existingJob.setSalary(jobRequestDto.salary());
         existingJob.setExpirationDate(jobRequestDto.expirationDate());
+        existingJob.setPriority(jobRequestDto.priority());
 
         if (jobRequestDto.companyId() != null) {
             Optional<Company> companyOpt = companyRepository.findById(jobRequestDto.companyId());
