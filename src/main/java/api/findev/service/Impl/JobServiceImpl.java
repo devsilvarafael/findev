@@ -29,16 +29,18 @@ public class JobServiceImpl implements JobService {
     private final DeveloperRepository developerRepository;
     private final JobDTOMapper jobDTOMapper;
     private final CandidatureRepository candidatureRepository;
+    private final SkillRepository skillRepository;
 
     public JobServiceImpl(JobRepository jobRepository, CompanyRepository companyRepository,
                           RecruiterRepository recruiterRepository, DeveloperRepository developerRepository,
-                          CandidatureRepository candidatureRepository, JobDTOMapper jobDTOMapper) {
+                          CandidatureRepository candidatureRepository, JobDTOMapper jobDTOMapper, SkillRepository skillRepository) {
         this.jobRepository = jobRepository;
         this.companyRepository = companyRepository;
         this.recruiterRepository = recruiterRepository;
         this.developerRepository = developerRepository;
         this.candidatureRepository = candidatureRepository;
         this.jobDTOMapper = jobDTOMapper;
+        this.skillRepository = skillRepository;
     }
 
     @Override
@@ -58,6 +60,8 @@ public class JobServiceImpl implements JobService {
         List<JobResponseDto> jobs = jobRepository.findJobsByRecruiterRecruiterId(recruiter, pageable).stream().map(jobDTOMapper).collect(Collectors.toList());
         return new PageImpl<>(jobs);
     }
+
+
 
     @Override
     public Optional<JobResponseDto> getJobById(UUID id) throws Exception {
@@ -111,18 +115,30 @@ public class JobServiceImpl implements JobService {
 
         if (jobRequestDto.requirements() != null) {
             jobRequestDto.requirements().forEach(requirementDto -> {
-                    if (requirementDto.getName() == null) {
-                        throw new IllegalArgumentException("Requirement name cannot be null.");
-                    }
+                if (requirementDto.getName() == null) {
+                    throw new IllegalArgumentException("Requirement name cannot be null.");
+                }
 
-                    if (requirementDto.getExperienceYears() == 0) {
-                        throw new IllegalArgumentException("Experience years cannot be zero.");
-                    }
+                if (requirementDto.getExperienceYears() == 0) {
+                    throw new IllegalArgumentException("Experience years cannot be zero.");
+                }
+
+                Optional<Skill> existingSkill = skillRepository.findByName(requirementDto.getName());
+
+                Skill skill;
+                if (existingSkill.isPresent()) {
+                    skill = existingSkill.get();
+                } else {
+                    skill = new Skill();
+                    skill.setName(requirementDto.getName());
+                    skillRepository.save(skill);
+                }
 
                 JobRequirement jobRequirement = new JobRequirement();
                 jobRequirement.setName(requirementDto.getName());
                 jobRequirement.setExperienceYears(requirementDto.getExperienceYears());
                 jobRequirement.setJob(job);
+                jobRequirement.setName(skill.getName());
                 job.getRequirements().add(jobRequirement);
             });
         }
@@ -131,6 +147,7 @@ public class JobServiceImpl implements JobService {
 
         return jobDTOMapper.apply(newJob);
     }
+
 
     @Override
     public void deleteJobById(UUID id) throws Exception {
@@ -156,6 +173,12 @@ public class JobServiceImpl implements JobService {
         existingJob.setSalary(jobRequestDto.salary());
         existingJob.setExpirationDate(jobRequestDto.expirationDate());
         existingJob.setPriority(jobRequestDto.priority());
+        existingJob.setContractType(jobRequestDto.contractType());
+        existingJob.setMinWeekHours(jobRequestDto.minWeekHours());
+        existingJob.setMaxWeekHours(jobRequestDto.maxWeekHours());
+        existingJob.setWorkModality(jobRequestDto.workModality());
+        existingJob.setWorkLocation(jobRequestDto.workLocation());
+
 
         if (jobRequestDto.companyId() != null) {
             Optional<Company> companyOpt = companyRepository.findById(jobRequestDto.companyId());

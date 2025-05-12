@@ -7,6 +7,8 @@ import java.util.UUID;
 
 public record JobCandidateCompleteDto(
         UUID candidateId,
+        UUID jobId,
+        String jobDescription,
         CompanyCandidatureDto company,
         DeveloperDto developerDto,
         String status

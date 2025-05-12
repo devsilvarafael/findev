@@ -3,6 +3,7 @@ package api.findev.repository;
 
 import api.findev.model.Job;
 
+import api.findev.model.JobCandidature;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 

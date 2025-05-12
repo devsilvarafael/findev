@@ -41,6 +41,8 @@ public class JobCandidatureDTOMapper {
         return new CandidatureDto(jobCandidature.getId(), developerDto, jobCandidature.getStatus().toString());
     }
 
+
+
     public JobCandidateCompleteDto applyToCompleteDto(JobCandidature jobCandidature) {
         Company company = jobCandidature.getJob().getCompany();
         if (company == null) {
@@ -65,7 +67,9 @@ public class JobCandidatureDTOMapper {
 
         return new JobCandidateCompleteDto(
                 jobCandidature.getId(),
-                new CompanyCandidatureDto(company.getName(), company.getIsActive()), // Avoid full entity
+                jobCandidature.getJob().getId(),
+                jobCandidature.getJob().getTitle(),
+                new CompanyCandidatureDto(company.getName(), company.getIsActive()),
                 developerDto,
                 jobCandidature.getStatus().toString()
         );
