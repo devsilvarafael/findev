@@ -233,7 +233,7 @@ public class JobServiceImpl implements JobService {
 
         boolean alreadyApplied = candidatureRepository.existsByJobAndDeveloper(job, developer);
         if (alreadyApplied) {
-            throw new Exception("Developer has already applied for this job.");
+            throw new Exception("Você já se candidatou a essa vaga.");
         }
 
         JobCandidature candidature = new JobCandidature();
