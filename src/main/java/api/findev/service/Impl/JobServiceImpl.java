@@ -125,14 +125,7 @@ public class JobServiceImpl implements JobService {
 
                 Optional<Skill> existingSkill = skillRepository.findByName(requirementDto.getName());
 
-                Skill skill;
-                if (existingSkill.isPresent()) {
-                    skill = existingSkill.get();
-                } else {
-                    skill = new Skill();
-                    skill.setName(requirementDto.getName());
-                    skillRepository.save(skill);
-                }
+                Skill skill = existingSkill.get();
 
                 JobRequirement jobRequirement = new JobRequirement();
                 jobRequirement.setName(requirementDto.getName());
